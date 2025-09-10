@@ -1,11 +1,13 @@
 import mariadb from 'mariadb';
 
 const pool = mariadb.createPool({
-    host: 'localhost',
+    host: process.env.HOST,
     user: 'root',
     password: 'localpassword',
-    database: 'test_db',
-    connectionLimit: 5
+    database: 'bookup_development',
+    connectionLimit: 10,
+    // waitForConnections: true,
+    // queueLimit: 0,
 });
 
 export async function query(sql, params) {
@@ -22,3 +24,9 @@ export async function query(sql, params) {
         }
     }
 }
+
+// export async function getTransactionConnection() {
+//     const connection = await pool.getConnection();
+//     await connection.beginTransaction();
+//     return connection;
+//   }
