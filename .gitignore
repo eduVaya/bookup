@@ -1,4 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# Build
+bin/
+obj/
 
 # dependencies
 node_modules
@@ -22,3 +25,13 @@ node_modules
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Paquetes NuGet descargados
+*.nupkg
+*.snupkg
+# Secretos
+secrets.json
+*.secret.json
+
+appsettings.json
+appsettings.*.json
