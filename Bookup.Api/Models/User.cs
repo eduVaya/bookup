@@ -22,6 +22,10 @@ namespace Bookup.Api.Models
         [Column("password_hash")]
         public string PasswordHash { get; set; } = string.Empty;
 
+        [Required]
+        [Column("status_id")]
+        public int StatusId { get; set; } = 1;
+
         [Column("created_at")]
         public DateTime? CreatedAt { get; set; }
 

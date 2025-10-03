@@ -23,6 +23,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
+builder.Services.AddSingleton(builder.Configuration.GetConnectionString("DefaultConnection"));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
