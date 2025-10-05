@@ -1,43 +1,33 @@
-using System.Text;
-using Bookup.Api.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using Bookup.Api.Services; // For AuthService
+using Microsoft.AspNetCore.Mvc; // Optional, but safe to keep for controller attributes
 
 var builder = WebApplication.CreateBuilder(args);
 
-//JWT Config
+// JWT config (you might still use this for JwtHelper)
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "super_secret_key_123!";
 var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "Bookup";
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// Add services to the container
 builder.Services.AddOpenApi();
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.AddControllers(); // Allows the app to use controllers (like HelloController)
-builder.Services.AddEndpointsApiExplorer(); // Enables endpoint discovery (used by Swagger)
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(
-        builder.Configuration.GetConnectionString("DefaultConnection"),
-        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString("DefaultConnection"))
-    )
-);
+// Register custom services
+builder.Services.AddScoped<AuthService>();
 
+// Register connection string for manual SQL access
 builder.Services.AddSingleton(builder.Configuration.GetConnectionString("DefaultConnection"));
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure the HTTP request pipeline
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
-    // app.UseSwagger(); // Generates Swagger JSON
-    // app.UseSwaggerUI(); // Provides a UI to test your API in the browser
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization(); // Prepares authorization middleware (safe to leave, even if unused)
-
-app.MapControllers(); // Maps all controllers (like HelloController) to their routes
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();
