@@ -26,12 +26,16 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Paquetes NuGet descargados
+
 *.nupkg
 *.snupkg
-# Secretos
+
 secrets.json
 *.secret.json
 
 appsettings.json
 appsettings.*.json
+
+.idea
+bookup.sln
+bookup.sln.DotSettings.user
