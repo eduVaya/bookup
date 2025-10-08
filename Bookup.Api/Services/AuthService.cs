@@ -31,30 +31,28 @@ namespace Bookup.Api.Services
             }
 
             var passwordHash = BCryptNet.HashPassword(password);
-            var insertQuery =
+            const string insertQuery =
                 @"INSERT INTO users (username, email, password_hash, status_id)
                                 VALUES (@Username, @Email, @PasswordHash, @StatusId)";
-            await using (var insertCmd = new MySqlCommand(insertQuery, connection))
+            await using var insertCmd = new MySqlCommand(insertQuery, connection);
+            insertCmd.Parameters.AddWithValue("@Username", username);
+            insertCmd.Parameters.AddWithValue("@Email", email);
+            insertCmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
+            insertCmd.Parameters.AddWithValue("@StatusId", UserStatus.Active);
+
+            await insertCmd.ExecuteNonQueryAsync();
+            var user = new User
             {
-                insertCmd.Parameters.AddWithValue("@Username", username);
-                insertCmd.Parameters.AddWithValue("@Email", email);
-                insertCmd.Parameters.AddWithValue("@PasswordHash", passwordHash);
-                insertCmd.Parameters.AddWithValue("@StatusId", UserStatus.Active);
+                Id = (int)insertCmd.LastInsertedId,
+                Username = username,
+                Email = email,
+                PasswordHash = passwordHash,
+                StatusId = UserStatus.Active,
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+            };
 
-                await insertCmd.ExecuteNonQueryAsync();
-                var user = new User
-                {
-                    Id = (int)insertCmd.LastInsertedId,
-                    Username = username,
-                    Email = email,
-                    PasswordHash = passwordHash,
-                    StatusId = UserStatus.Active,
-                    CreatedAt = DateTime.Now,
-                    UpdatedAt = DateTime.Now,
-                };
-
-                return user;
-            }
+            return user;
         }
 
         public async Task<(int Id, string Username, string Email, string PasswordHash)?> LoginAsync(string email)

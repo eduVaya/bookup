@@ -6,7 +6,7 @@ namespace Bookup.Api.Models
         public string Username { get; set; } = string.Empty;
         public string Email { get; set; } = string.Empty;
         public string PasswordHash { get; set; } = string.Empty;
-        public int StatusId { get; set; } = 1;
+        public int StatusId { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
     }
