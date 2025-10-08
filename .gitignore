@@ -38,4 +38,4 @@ appsettings.*.json
 
 .idea
 bookup.sln
-bookup.sln.DotSettings.user
+*.DotSettings.user
