@@ -6,6 +6,7 @@ namespace Bookup.Api.DTOs
     {
         [Required(ErrorMessage = "GroupId is required")]
         public int GroupId { get; set; }
+        [Required(ErrorMessage = "name is required")]
         public string Name { get; set; } = string.Empty;
         
         public string Description { get; set; } = string.Empty;

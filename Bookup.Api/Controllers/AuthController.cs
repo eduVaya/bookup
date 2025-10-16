@@ -1,10 +1,10 @@
-using System.IdentityModel.Tokens.Jwt; // For generating JWT tokens
-using System.Security.Claims; // For creating and managing token claims
-using System.Text; // For Encoding.UTF8.GetBytes when creating the signing key
+// For generating JWT tokens
+// For creating and managing token claims
+// For Encoding.UTF8.GetBytes when creating the signing key
 using Bookup.Api.DTOs; // For SignupRequest, LoginRequest, SignupResponse, LoginResponse
 using Bookup.Api.Services; // For AuthService
 using Microsoft.AspNetCore.Mvc; // For ControllerBase, ApiController, IActionResult, etc.
-using Microsoft.IdentityModel.Tokens; // For SymmetricSecurityKey and SigningCredentials
+// For SymmetricSecurityKey and SigningCredentials
 using BCryptNet = BCrypt.Net.BCrypt; // Alias for the BCrypt.Net library (password hashing)
 
 namespace Bookup.Api.Controllers
