@@ -9,8 +9,6 @@ namespace Bookup.Api.Services
     {
         private readonly string _connectionString;
         private readonly ILogger<GroupService> _logger;
-
-
         public GroupService(string connectionString, ILogger<GroupService> logger)
         {
             _connectionString = connectionString;
@@ -26,11 +24,12 @@ namespace Bookup.Api.Services
                 await connection.OpenAsync();
 
                 const string query =
-                    "INSERT INTO groups (name, description, created_by) VALUES (@name, @description, @created_by)";
+                    "INSERT INTO groups (name, description, created_by, user_id) VALUES (@name, @description, @created_by, @user_id)";
                 await using var insertCommand = new MySqlCommand(query, connection);
                 insertCommand.Parameters.AddWithValue("@name", name);
                 insertCommand.Parameters.AddWithValue("@description", description);
                 insertCommand.Parameters.AddWithValue("@created_by", createdBy);
+                insertCommand.Parameters.AddWithValue("@user_id", createdBy);
 
                 await insertCommand.ExecuteNonQueryAsync();
                 return await GetGroupAsync((int)insertCommand.LastInsertedId);
@@ -79,12 +78,39 @@ namespace Bookup.Api.Services
             return await GetGroupAsync(groupId);
         }
 
+        public async Task<int?> DeleteGroupAsync(int groupId)
+        {
+            try
+            {
+                await using var connection = new MySqlConnection(_connectionString);
+                await connection.OpenAsync();
+                
+                const string query = "UPDATE groups SET is_deleted = 1 WHERE id = @groupId";
+                await using var deleteCommand = new MySqlCommand(query, connection);
+                deleteCommand.Parameters.AddWithValue("@groupId", groupId);
+                
+                var affectedRows = await deleteCommand.ExecuteNonQueryAsync();
+
+                return affectedRows > 0 ? groupId : null;
+            }
+            catch (MySqlException ex)
+            {
+                _logger.LogError(ex, "MySQL error while creating group.");
+                throw; 
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Unexpected error while creating group.");
+                throw;
+            }
+        }
+        
         public async Task<Group?> GetGroupAsync(int groupId)
         {
             await using var connection = new MySqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            const string query = "SELECT id, name, description, created_by, created_at FROM groups WHERE id = @id LIMIT 1";
+            const string query = "SELECT id, name, description, created_by, created_at FROM groups WHERE id = @id AND is_deleted = 0 LIMIT 1";
             
             await using var selectCommand = new MySqlCommand(query, connection);
             selectCommand.Parameters.AddWithValue("@id", groupId);

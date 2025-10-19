@@ -11,23 +11,13 @@ namespace Bookup.Api.Controllers
     public class GroupController : ControllerBase
     {
         private readonly GroupService _groupService;
-        private readonly ILogger<GroupController> _logger;
-
-        public GroupController(GroupService groupService, ILogger<GroupController> logger)
+        public GroupController(GroupService groupService)
         {
             _groupService = groupService;
-            _logger = logger;
         }
-
         [HttpPost("createGroup")]
         public async Task<IActionResult> CreateGroup(CreateGroupRequest request)
         {
-            // if (!ModelState.IsValid)
-            // {
-            //     var errors = ModelState.Values.SelectMany(value => value.Errors).Select(error => error.ErrorMessage).ToList();
-            //     return BadRequest(ApiResponse<object>.Fail("Validation failed", errors));
-            // }
-
             var group = await _groupService.CreateGroupAsync(
                 request.CreatedBy,
                 request.Name,
@@ -40,18 +30,13 @@ namespace Bookup.Api.Controllers
 
             var response = new GroupResponse
             {
-                Message = "Group created",
                 GroupId = group.Id,
                 Name = group.Name,
                 Description = group.Description,
                 CreatedBy = group.CreatedBy
             };
-
-            // return CreatedAtAction(nameof(CreateGroup), response);
             return StatusCode(201, ApiResponse<GroupResponse>.Ok(response, "Group created"));
         }
-
-
         [HttpPost("updateGroup")]
         public async Task<IActionResult> UpdateGroup(UpdateGroupRequest request)
         {
@@ -60,8 +45,39 @@ namespace Bookup.Api.Controllers
                 request.Name,
                 request.Description
             );
+            if (group == null)
+            {
+                return BadRequest("Failed to update group");
+            }
+            var response = new GroupResponse
+            {
+                GroupId = group.Id,
+                Name = group.Name,
+                Description = group.Description,
+                CreatedBy = group.CreatedBy
+            };
+            return StatusCode(200, ApiResponse<GroupResponse>.Ok(response, "Group updated"));
+        }
+        [HttpDelete("{groupId:int}")]
+        public async Task<IActionResult> DeleteGroup(int groupId)
+        {
+            var deleted = await _groupService.DeleteGroupAsync(groupId);
 
-            return CreatedAtAction(nameof(UpdateGroup), group);
+            if (deleted == null)
+            {
+                return NotFound(ApiResponse<object>.Fail("Group not found."));
+            }
+            return Ok(ApiResponse<object>.Ok(new {groupId= deleted}, "Group deleted successfully."));;
+        }
+        [HttpGet("{groupId:int}")]
+        public async Task<IActionResult> GetGroup(int groupId)
+        {
+            var group = await _groupService.GetGroupAsync(groupId);
+            if (group == null)
+            {
+                return NotFound(ApiResponse<object>.Fail("Group not found."));
+            }
+            return Ok(ApiResponse<object>.Ok(group, "Group found"));
         }
     }
 }
