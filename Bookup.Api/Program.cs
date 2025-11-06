@@ -39,6 +39,7 @@ builder.Services.AddEndpointsApiExplorer();
 // Register custom services
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<GroupService>();
+builder.Services.AddScoped<GroupMemberService>();
 
 // Register connection string for manual SQL access
 builder.Services.AddSingleton(builder.Configuration.GetConnectionString("DefaultConnection"));

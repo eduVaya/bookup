@@ -1,4 +1,5 @@
 using Bookup.Api.DTOs;
+using Bookup.Api.DTOs.Groups;
 using Bookup.Api.Services;
 using Bookup.Api.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace Bookup.Api.Controllers
         public async Task<IActionResult> CreateGroup(CreateGroupRequest request)
         {
             var group = await _groupService.CreateGroupAsync(
-                request.CreatedBy,
+                request.UserId,
                 request.Name,
                 request.Description
             );
@@ -79,5 +80,11 @@ namespace Bookup.Api.Controllers
             }
             return Ok(ApiResponse<object>.Ok(group, "Group found"));
         }
+        //
+        // [HttpPost("createGroupWithMember")]
+        // public async Task<IActionResult> CreateGroupWithMember()
+        // {
+        //     
+        // }
     }
 }

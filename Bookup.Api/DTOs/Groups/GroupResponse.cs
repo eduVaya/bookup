@@ -1,4 +1,4 @@
-namespace Bookup.Api.DTOs
+namespace Bookup.Api.DTOs.Groups
 {
     public class GroupResponse
     {

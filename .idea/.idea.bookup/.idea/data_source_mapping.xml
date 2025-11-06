@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourcePerFileMappings">
+    <file url="file://$PROJECT_DIR$/Bookup.Api/Services/GroupMemberService.cs" value="432e3af1-c73e-4ed0-86d3-d7fe01ede3f0" />
     <file url="file://$PROJECT_DIR$/Bookup.Api/Services/GroupService.cs" value="432e3af1-c73e-4ed0-86d3-d7fe01ede3f0" />
     <file url="file://$APPLICATION_CONFIG_DIR$/consoles/db/432e3af1-c73e-4ed0-86d3-d7fe01ede3f0/console.sql" value="432e3af1-c73e-4ed0-86d3-d7fe01ede3f0" />
   </component>

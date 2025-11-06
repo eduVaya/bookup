@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Bookup.Api.DTOs
+namespace Bookup.Api.DTOs.Groups
 {
     public class CreateGroupRequest
     {
@@ -11,7 +11,7 @@ namespace Bookup.Api.DTOs
         
         [Required(ErrorMessage = "CreatedBy is required")]
         [Range(1, int.MaxValue, ErrorMessage = "CreatedBy must be greater than 0")]
-        public int CreatedBy {get; set;}
+        public int UserId {get; set;}
     }
     
 }
