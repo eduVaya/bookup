@@ -1,5 +1,6 @@
 using Bookup.Api.Middlewares;
 using Bookup.Api.Services;
+using Bookup.Api.Services.GroupMembers;
 using Bookup.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,7 +40,8 @@ builder.Services.AddEndpointsApiExplorer();
 // Register custom services
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<GroupService>();
-builder.Services.AddScoped<GroupMemberService>();
+builder.Services.AddScoped<IGroupMemberService, GroupMemberService>();
+
 
 // Register connection string for manual SQL access
 builder.Services.AddSingleton(builder.Configuration.GetConnectionString("DefaultConnection"));

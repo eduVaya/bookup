@@ -1,5 +1,5 @@
 using Bookup.Api.DTOs.GroupMembers;
-using Bookup.Api.Services;
+using Bookup.Api.Services.GroupMembers;
 using Bookup.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,9 +9,9 @@ namespace Bookup.Api.Controllers
     [Route("api/[controller]")]
     public class GroupMembersController : ControllerBase
     {
-        private readonly GroupMemberService _groupMemberService;
+        private readonly IGroupMemberService _groupMemberService;
 
-        public GroupMembersController(GroupMemberService groupMemberService)
+        public GroupMembersController(IGroupMemberService groupMemberService)
         {
             _groupMemberService = groupMemberService;
         }

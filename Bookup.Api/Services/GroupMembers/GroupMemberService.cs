@@ -1,12 +1,12 @@
 using System.Data;
 using Bookup.Api.Constants;
-using Bookup.Api.DTOs.GroupMembers;
 using Bookup.Api.Models;
+using Bookup.Api.DTOs.GroupMembers;
 using MySqlConnector;
 
-namespace Bookup.Api.Services
+namespace Bookup.Api.Services.GroupMembers
 {
-    public class GroupMemberService
+    public class GroupMemberService : IGroupMemberService
     {
         private readonly string _connectionString;
         private readonly ILogger<GroupMemberService> _logger;
@@ -16,7 +16,7 @@ namespace Bookup.Api.Services
             _connectionString = connectionString;
             _logger = logger;
         }
-
+ 
         public async Task<GroupMember?> CreateGroupMemberAsync(CreateGroupMemberRequest createGroupMemberRequest)
         {
             try
