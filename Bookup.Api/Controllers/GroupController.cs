@@ -2,6 +2,7 @@ using Bookup.Api.DTOs;
 using Bookup.Api.DTOs.Groups;
 using Bookup.Api.Services;
 using Bookup.Api.Models;
+using Bookup.Api.Services.Groups;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -11,19 +12,17 @@ namespace Bookup.Api.Controllers
     [Route("api/[controller]")]
     public class GroupController : ControllerBase
     {
-        private readonly GroupService _groupService;
-        public GroupController(GroupService groupService)
+        private readonly IGroupService _groupService;
+
+        public GroupController(IGroupService groupService)
         {
             _groupService = groupService;
         }
+
         [HttpPost("createGroup")]
         public async Task<IActionResult> CreateGroup(CreateGroupRequest request)
         {
-            var group = await _groupService.CreateGroupAsync(
-                request.UserId,
-                request.Name,
-                request.Description
-            );
+            var group = await _groupService.CreateGroupAsync(request);
             if (group == null)
             {
                 return BadRequest("Failed to create group");
@@ -38,18 +37,16 @@ namespace Bookup.Api.Controllers
             };
             return StatusCode(201, ApiResponse<GroupResponse>.Ok(response, "Group created"));
         }
+
         [HttpPost("updateGroup")]
         public async Task<IActionResult> UpdateGroup(UpdateGroupRequest request)
         {
-            var group = await _groupService.UpdateGroupAsync(
-                request.GroupId,
-                request.Name,
-                request.Description
-            );
+            var group = await _groupService.UpdateGroupAsync(request);
             if (group == null)
             {
                 return BadRequest("Failed to update group");
             }
+
             var response = new GroupResponse
             {
                 GroupId = group.Id,
@@ -59,6 +56,17 @@ namespace Bookup.Api.Controllers
             };
             return StatusCode(200, ApiResponse<GroupResponse>.Ok(response, "Group updated"));
         }
+
+        [HttpPost("createGroupWithMember")]
+        public async Task<IActionResult> CreateGroupWithMember(CreateGroupWithMemberRequest request)
+        {
+            var groupWithMember = await _groupService.CreateGroupWithGroupMemberAsync(request);
+            if (groupWithMember == null)
+            {
+                return BadRequest("Failed to create group with member");
+            }
+            return StatusCode(201, ApiResponse<GroupWithGroupMember>.Ok(groupWithMember, "Group with member created")); 
+        } 
         [HttpDelete("{groupId:int}")]
         public async Task<IActionResult> DeleteGroup(int groupId)
         {
@@ -68,8 +76,10 @@ namespace Bookup.Api.Controllers
             {
                 return NotFound(ApiResponse<object>.Fail("Group not found."));
             }
-            return Ok(ApiResponse<object>.Ok(new {groupId= deleted}, "Group deleted successfully."));;
+
+            return Ok(ApiResponse<object>.Ok(new { groupId = deleted }, "Group deleted successfully."));
         }
+
         [HttpGet("{groupId:int}")]
         public async Task<IActionResult> GetGroup(int groupId)
         {
@@ -78,6 +88,7 @@ namespace Bookup.Api.Controllers
             {
                 return NotFound(ApiResponse<object>.Fail("Group not found."));
             }
+
             return Ok(ApiResponse<object>.Ok(group, "Group found"));
         }
         //

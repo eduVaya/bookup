@@ -1,0 +1,14 @@
+POST http://localhost:5075/api/group/createGroupWithMember HTTP/1.1
+content-type: application/json
+
+{
+  "group": {
+    "Name": "Crear",
+    "Description": "Con miembro",
+    "UserId": 1
+  },
+  "groupMember": {
+    "UserId": 1,
+    "IsAdmin": 1
+  }
+}
