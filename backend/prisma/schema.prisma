@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  MEMBER
+}
+
+enum BookStatus {
+  PROPOSED
+  READING
+  COMPLETED
+}
+
+enum RsvpStatus {
+  ATTENDING
+  NOT_ATTENDING
+  MAYBE
+}
+
+model User {
+  id          Int           @id @default(autoincrement())
+  email       String        @unique
+  password    String
+  name        String
+  avatar      String?
+  createdAt   DateTime      @default(now())
+  clubs       ClubMember[]
+  books       Book[]
+  votes       BookVote[]
+  rsvps       Rsvp[]
+  reviews     Review[]
+  createdClubs Club[]       @relation("CreatedBy")
+}
+
+model Club {
+  id          Int           @id @default(autoincrement())
+  name        String
+  description String
+  isPublic    Boolean       @default(true)
+  inviteCode  String        @unique
+  createdAt   DateTime      @default(now())
+  createdBy   Int
+  creator     User          @relation("CreatedBy", fields: [createdBy], references: [id])
+  members     ClubMember[]
+  books       Book[]
+  sessions    Session[]
+}
+
+model ClubMember {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  clubId    Int
+  role      Role     @default(MEMBER)
+  joinedAt  DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  club      Club     @relation(fields: [clubId], references: [id])
+
+  @@unique([userId, clubId])
+}
+
+model Book {
+  id            Int        @id @default(autoincrement())
+  clubId        Int
+  proposedBy    Int
+  googleBooksId String
+  title         String
+  author        String
+  coverUrl      String?
+  status        BookStatus @default(PROPOSED)
+  proposedAt    DateTime   @default(now())
+  startedAt     DateTime?
+  completedAt   DateTime?
+  club          Club       @relation(fields: [clubId], references: [id])
+  proposer      User       @relation(fields: [proposedBy], references: [id])
+  votes         BookVote[]
+  reviews       Review[]
+  sessions      Session[]
+}
+
+model BookVote {
+  id        Int      @id @default(autoincrement())
+  bookId    Int
+  userId    Int
+  createdAt DateTime @default(now())
+  book      Book     @relation(fields: [bookId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([bookId, userId])
+}
+
+model Session {
+  id          Int        @id @default(autoincrement())
+  clubId      Int
+  bookId      Int
+  title       String
+  scheduledAt DateTime
+  location    String?
+  createdAt   DateTime   @default(now())
+  club        Club       @relation(fields: [clubId], references: [id])
+  book        Book       @relation(fields: [bookId], references: [id])
+  rsvps       Rsvp[]
+}
+
+model Rsvp {
+  id        Int        @id @default(autoincrement())
+  sessionId Int
+  userId    Int
+  status    RsvpStatus @default(MAYBE)
+  createdAt DateTime   @default(now())
+  session   Session    @relation(fields: [sessionId], references: [id])
+  user      User       @relation(fields: [userId], references: [id])
+
+  @@unique([sessionId, userId])
+}
+
+model Review {
+  id        Int      @id @default(autoincrement())
+  bookId    Int
+  userId    Int
+  rating    Int
+  content   String?
+  createdAt DateTime @default(now())
+  book      Book     @relation(fields: [bookId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([bookId, userId])
+}
