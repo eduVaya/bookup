@@ -18,7 +18,7 @@ enum BookStatus {
   COMPLETED
 }
 
-enum RsvpStatus {
+enum AttendanceStatus {
   ATTENDING
   NOT_ATTENDING
   MAYBE
@@ -34,7 +34,7 @@ model User {
   clubs       ClubMember[]
   books       Book[]
   votes       BookVote[]
-  rsvps       Rsvp[]
+  attendance       Attendance[]
   reviews     Review[]
   createdClubs Club[]       @relation("CreatedBy")
 }
@@ -105,14 +105,14 @@ model Session {
   createdAt   DateTime   @default(now())
   club        Club       @relation(fields: [clubId], references: [id])
   book        Book       @relation(fields: [bookId], references: [id])
-  rsvps       Rsvp[]
+  attendance       Attendance[]
 }
 
-model Rsvp {
+model Attendance {
   id        Int        @id @default(autoincrement())
   sessionId Int
   userId    Int
-  status    RsvpStatus @default(MAYBE)
+  status    AttendanceStatus @default(MAYBE)
   createdAt DateTime   @default(now())
   session   Session    @relation(fields: [sessionId], references: [id])
   user      User       @relation(fields: [userId], references: [id])
