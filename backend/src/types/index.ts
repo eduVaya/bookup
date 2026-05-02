@@ -6,7 +6,14 @@ export interface JwtPayload {
 
 }
 
+export interface UpdateUserPayload {
+    name?: string
+    avatar?: string
+}
+
+
 export type AppVariables = {
     userId: number
     userEmail: string
 }
+

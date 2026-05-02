@@ -5,6 +5,7 @@ import { logger } from 'hono/logger'
 import 'dotenv/config'
 import authRouter from './routes/auth.js'
 import usersRouter from './routes/users.js'
+import { errorResponse } from './lib/response.js'
 
 
 
@@ -19,11 +20,11 @@ app.use('*', cors({
 
 // Global error handler
 app.onError((error, context) => {
-    console.error(error)
-    return context.json({
-        success: false,
-        errors: ['Internal server error']
-    }, 500)
+    // TODO: show error in development. in prod just server error and log somewhere. Maybe made a ui.
+    if (process.env.NODE_ENV === 'development') {
+        return errorResponse(context, error.message, 500)
+    }
+    return errorResponse(context, 'Internal server error', 500)
 })
 
 // Not found handler
