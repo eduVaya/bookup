@@ -4,6 +4,7 @@ import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
 import 'dotenv/config'
 import authRouter from './routes/auth.js'
+import usersRouter from './routes/users.js'
 
 
 
@@ -34,7 +35,8 @@ app.notFound((context) => {
 })
 
 // routes
-app.route('/auth', authRouter)
+app.route('/auth', authRouter);
+app.route('/users', usersRouter);
 
 app.get('/', (context) => {
     return context.json({ message: 'BookUp API runnig' });
