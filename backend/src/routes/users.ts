@@ -3,13 +3,10 @@ import prisma from '../lib/prisma.js'
 import type { AppVariables, UpdateUserPayload } from '../types/index.js'
 import { errorResponse, successResponse } from '../lib/response.js'
 import authMiddleware from '../middleware/auth.js'
+import { parseValidNumber } from '../lib/utlis.js'
 
 const usersRouter = new Hono<{ Variables: AppVariables }>();
 
-const parseValidNumber = (number: any) => {
-    const parsedNumber = Number(number);
-    return Number.isNaN(parsedNumber) ? null : parsedNumber;
-}
 
 // GET /:id
 usersRouter.get('/:id', async (context) => {
