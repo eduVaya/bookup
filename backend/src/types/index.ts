@@ -6,14 +6,19 @@ export interface JwtPayload {
 
 }
 
+export type AppVariables = {
+    userId: number
+    userEmail: string
+}
+
 export interface UpdateUserPayload {
     name?: string
     avatar?: string
 }
 
 
-export type AppVariables = {
-    userId: number
-    userEmail: string
+export interface UpdateClubPayload {
+    name?: string
+    description?: string
+    isPublic?: boolean
 }
-

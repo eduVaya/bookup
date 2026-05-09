@@ -103,7 +103,7 @@ authRouter.post('/login', async (context) => {
 
 // GET /auth/me
 authRouter.get('/me', authMiddleware, async (context) => {
-    const userId = context.get('userId')
+    const userId = context.get('userId');
 
     const user = await prisma.user.findUnique({
         where: { id: userId },

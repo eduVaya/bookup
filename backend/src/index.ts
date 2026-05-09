@@ -6,6 +6,7 @@ import 'dotenv/config'
 import authRouter from './routes/auth.js'
 import usersRouter from './routes/users.js'
 import { errorResponse } from './lib/response.js'
+import clubsRouter from './routes/clubs.js'
 
 
 
@@ -38,6 +39,8 @@ app.notFound((context) => {
 // routes
 app.route('/auth', authRouter);
 app.route('/users', usersRouter);
+app.route('/clubs', clubsRouter);
+
 
 app.get('/', (context) => {
     return context.json({ message: 'BookUp API runnig' });

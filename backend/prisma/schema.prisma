@@ -31,6 +31,8 @@ model User {
   name         String
   avatar       String?
   createdAt    DateTime     @default(now())
+  deletedAt    DateTime?
+  deletedBy    Int?
   clubMembers  ClubMember[]
   books        Book[]
   bookVotes    BookVote[]
@@ -47,6 +49,8 @@ model Club {
   inviteCode  String       @unique
   createdAt   DateTime     @default(now())
   createdBy   Int
+  deletedAt   DateTime?
+  deletedBy   Int?
   creator     User         @relation("CreatedBy", fields: [createdBy], references: [id])
   clubMembers ClubMember[]
   books       Book[]
@@ -59,6 +63,8 @@ model ClubMember {
   clubId   Int
   role     Role     @default(MEMBER)
   joinedAt DateTime @default(now())
+  deletedAt DateTime?
+  deletedBy Int?
   user     User     @relation(fields: [userId], references: [id])
   club     Club     @relation(fields: [clubId], references: [id])
 
@@ -77,6 +83,8 @@ model Book {
   proposedAt    DateTime   @default(now())
   startedAt     DateTime?
   completedAt   DateTime?
+  deletedAt    DateTime?
+  deletedBy    Int?
   club          Club       @relation(fields: [clubId], references: [id])
   proposer      User       @relation(fields: [proposedBy], references: [id])
   bookVotes     BookVote[]
@@ -89,6 +97,8 @@ model BookVote {
   bookId    Int
   userId    Int
   createdAt DateTime @default(now())
+  deletedAt    DateTime?
+  deletedBy    Int?
   book      Book     @relation(fields: [bookId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 
@@ -103,6 +113,8 @@ model Session {
   scheduledAt DateTime
   location    String?
   createdAt   DateTime     @default(now())
+  deletedAt    DateTime?
+  deletedBy    Int?
   club        Club         @relation(fields: [clubId], references: [id])
   book        Book         @relation(fields: [bookId], references: [id])
   attendances Attendance[]
@@ -114,6 +126,8 @@ model Attendance {
   userId    Int
   status    AttendanceStatus @default(MAYBE)
   createdAt DateTime         @default(now())
+  deletedAt    DateTime?
+  deletedBy    Int?
   session   Session          @relation(fields: [sessionId], references: [id])
   user      User             @relation(fields: [userId], references: [id])
 
@@ -127,6 +141,8 @@ model Review {
   rating    Int
   content   String?
   createdAt DateTime @default(now())
+  deletedAt    DateTime?
+  deletedBy    Int?
   book      Book     @relation(fields: [bookId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 
