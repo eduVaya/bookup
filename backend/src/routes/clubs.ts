@@ -1,10 +1,10 @@
-import { Hono } from 'hono'
+import { Hono } from 'hono';
 import { nanoid } from 'nanoid';
-import { AppVariables, UpdateClubPayload } from '../types'
-import authMiddleware from '../middleware/auth';
-import { errorResponse, successResponse } from '../lib/response';
 import prisma from '../lib/prisma';
-import { isClubAdmin, isClubMember, isString, parseValidNumber, softDelete } from '../lib/utlis';
+import { errorResponse, successResponse } from '../lib/response';
+import { isClubAdmin, isClubMember, parseValidNumber } from '../lib/utlis';
+import authMiddleware from '../middleware/auth';
+import { AppVariables, UpdateClubPayload } from '../types';
 
 const clubsRouter = new Hono<{ Variables: AppVariables }>();
 
@@ -92,10 +92,11 @@ clubsRouter.delete('/:id', authMiddleware, async (context) => {
         return errorResponse(context, 'Unauthorized', 403);
     }
 
-    const deletedClub = await prisma.club.delete({
+    const deletedClub = await prisma.club.update({
         where: { id },
-        select: {
-            id: true
+        data: {
+            deletedAt: new Date(),
+            deletedBy: userId
         }
     });
     return successResponse(context, deletedClub);

@@ -7,6 +7,7 @@ import authRouter from './routes/auth.js'
 import usersRouter from './routes/users.js'
 import { errorResponse } from './lib/response.js'
 import clubsRouter from './routes/clubs.js'
+import booksRouter from './routes/books.js'
 
 
 
@@ -41,6 +42,7 @@ app.notFound((context) => {
 app.route('/auth', authRouter);
 app.route('/users', usersRouter);
 app.route('/clubs', clubsRouter);
+app.route('/books', booksRouter);
 
 
 app.get('/', (context) => {
