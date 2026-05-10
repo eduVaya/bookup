@@ -4,7 +4,7 @@ import { AppVariables, UpdateClubPayload } from '../types'
 import authMiddleware from '../middleware/auth';
 import { errorResponse, successResponse } from '../lib/response';
 import prisma from '../lib/prisma';
-import { isClubAdmin, isString, parseValidNumber } from '../lib/utlis';
+import { isClubAdmin, isClubMember, isString, parseValidNumber, softDelete } from '../lib/utlis';
 
 const clubsRouter = new Hono<{ Variables: AppVariables }>();
 
@@ -102,8 +102,80 @@ clubsRouter.delete('/:id', authMiddleware, async (context) => {
 });
 
 // POST /clubs/join
+clubsRouter.post('/join', authMiddleware, async (context) => {
+    const userId = context.get('userId');
+    const { inviteCode } = await context.req.json();
+
+    const club = await prisma.club.findUnique({
+        where: {
+            inviteCode,
+            deletedAt: null
+        },
+        select: {
+            id: true
+        }
+    });
+    if (!club) {
+        return errorResponse(context, 'Club not found or incorrect inviite code', 404);
+    }
+    const existingMember = await prisma.clubMember.findUnique({
+        where: {
+            userId_clubId: { userId, clubId: club.id }
+        }
+    })
+
+    if (existingMember) {
+        return errorResponse(context, 'You are already a member of this club', 409)
+    }
+    const clubMember = await prisma.clubMember.create({
+        data: {
+            userId: userId,
+            clubId: club.id,
+            role: 'MEMBER'
+        },
+        select: {
+            userId: true,
+            role: true
+        }
+    });
+    return successResponse(context, clubMember);
+});
 
 // DELETE /clubs/:id/members/:userId
+clubsRouter.delete('/:id/member/:userId', authMiddleware, async (context) => {
+    const userId = context.get('userId');
+
+    const clubId = parseValidNumber(context.req.param('id'));
+    if (!clubId) {
+        return errorResponse(context, 'Invalid clubId number', 400);
+    }
+    const memberUserId = parseValidNumber(context.req.param('userId'));
+    if (!memberUserId) {
+        return errorResponse(context, 'Invalid member number', 400);
+    }
+
+    const isAdmin = await isClubAdmin(userId, clubId);
+    if (!isAdmin) {
+        return errorResponse(context, 'Unauthorized', 403);
+    }
+    if (memberUserId === userId) {
+        return errorResponse(context, 'You cannot remove yourself from the club', 400)
+    }
+    const isMember = await isClubMember(memberUserId, clubId);
+    if (!isMember) {
+        return errorResponse(context, 'User is not a member', 409);
+    }
+
+    const deletedMember = await prisma.clubMember.update({
+        where: {
+            userId_clubId: { userId: memberUserId, clubId }
+        },
+        data: { deletedAt: new Date(), deletedBy: userId }
+    })
+
+    return successResponse(context, deletedMember);
+
+});
 
 // GET /clubs PUBLIC
 clubsRouter.get('/', async (context) => {

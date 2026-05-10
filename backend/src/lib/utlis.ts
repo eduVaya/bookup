@@ -15,16 +15,27 @@ export const isClubAdmin = async (userId: number, clubId: number): Promise<boole
         where: {
             userId_clubId: { userId, clubId }
         }
-    })
+    });
     return member?.role === 'ADMIN'
 }
 
+export const isClubMember = async (userId: number, clubId: number): Promise<boolean> => {
+    const existingMember = await prisma.clubMember.findFirst({
+        where: {
+            userId,
+            clubId,
+            deletedAt: null
+        }
+    });
+    return !!existingMember;
+}
+
 export const softDelete = async (model: any, id: number, deletedBy: number) => {
-    return model.update({
+    return await model.update({
         where: { id },
         data: {
             deletedAt: new Date(),
             deletedBy
         }
-    })
+    });
 }

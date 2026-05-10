@@ -23,6 +23,7 @@ app.use('*', cors({
 app.onError((error, context) => {
     // TODO: show error in development. in prod just server error and log somewhere. Maybe made a ui.
     if (process.env.NODE_ENV === 'development') {
+        console.trace();
         return errorResponse(context, error.message, 500)
     }
     return errorResponse(context, 'Internal server error', 500)
