@@ -7,11 +7,12 @@ import { HTTP } from '../lib/httpCodes';
 import { isClubMember, parseValidNumber } from '../lib/utlis';
 
 
-const booksRouter = new Hono<{ Variables: AppVariables }>
+const clubBooksRouter = new Hono<{ Variables: AppVariables }>
 
-// GET /clubs/:id/books - list all club books
-// POST /Book/:id/books - propose book. Must be a clubMember
-booksRouter.post('/:id/books', authMiddleware, async (context) => {
+
+// GET /clubs/:id/books
+// POST /clubs/:id/books
+clubBooksRouter.post('/:id/books', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const clubId = parseValidNumber(context.req.param('id'));
     if (!clubId) {
@@ -40,27 +41,8 @@ booksRouter.post('/:id/books', authMiddleware, async (context) => {
     return successResponse(context, book);
 
 });
-// PATCH /clubs/:id/books/:bookId - change status. Only Admin
-// DELETE /clubs/:id/books/:bookId - soft delete. Only Admin
+// PATCH /clubs/:id/books/:bookId
+// DELETE /clubs/:id/books/:bookId
 
-// GET /books/search?q= — search in Google Books API
-booksRouter.get('/search', async (context) => {
-    const search = context.req.query('q');
-    if (!search) {
-        return errorResponse(context, 'value is empty', HTTP.BAD_REQUEST);
-    }
-    const response = await fetch(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(search)}&maxResults=10&key=${process.env.GOOGLE_BOOKS_API_KEY}`);
-    const data = await response.json();
 
-    const parseData = data.items?.map((book: any) => {
-        return {
-            googleBooksId: book.id,
-            title: book.volumeInfo?.title,
-            author: book.volumeInfo?.authors?.join(', '),
-            coverUrl: book.volumeInfo?.imageLinks?.thumbnail
-        }
-    });
-    return successResponse(context, parseData);
-});
-
-export default booksRouter;
+export default clubBooksRouter;
