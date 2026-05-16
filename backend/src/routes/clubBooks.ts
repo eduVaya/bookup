@@ -5,13 +5,52 @@ import { AppVariables } from '../types';
 import { errorResponse, successResponse } from '../lib/response';
 import { HTTP } from '../lib/httpCodes';
 import { isClubMember, parseValidNumber } from '../lib/utlis';
+import { BookStatus } from '@prisma/client';
 
 
 const clubBooksRouter = new Hono<{ Variables: AppVariables }>
 
 
 // GET /clubs/:id/books
-// POST /clubs/:id/books
+clubBooksRouter.get('/:id/books', async (context) => {
+    const clubId = parseValidNumber(context.req.param('id'));
+    if (!clubId) {
+        return errorResponse(context, 'Invalid number', 400);
+    }
+    const status = context.req.query('status') as BookStatus | undefined;
+
+
+    const books = await prisma.book.findMany({
+        where: {
+            clubId,
+            deletedAt: null,
+            ...(status && { status })
+        },
+        select: {
+            clubId: true,
+            googleBooksId: true,
+            title: true,
+            author: true,
+            coverUrl: true,
+            status: true,
+            proposer: {
+                select: {
+                    name: true,
+                    avatar: true
+                }
+            },
+            _count: {
+                select: {
+                    bookVotes: true
+                }
+            }
+        }
+    });
+
+    return successResponse(context, books);
+});
+
+// POST /clubs/:id/books - propose book
 clubBooksRouter.post('/:id/books', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const clubId = parseValidNumber(context.req.param('id'));
