@@ -4,7 +4,21 @@ export const parseValidNumber = (number: unknown): number | null => {
     const parsedNumber = Number(number);
     return Number.isNaN(parsedNumber) ? null : parsedNumber;
 }
+export const parseParams = (params: Record<string, string | undefined>) => {
+    const result: Record<string, number> = {}
+    const errors: string[] = []
 
+    for (const [key, value] of Object.entries(params)) {
+        const parsed = parseValidNumber(value)
+        if (!parsed) {
+            errors.push(`Invalid ${key}`)
+        } else {
+            result[key] = parsed
+        }
+    }
+
+    return { params: result, errors }
+}
 export const isString = (value: unknown): boolean => {
     return typeof value === 'string';
 };

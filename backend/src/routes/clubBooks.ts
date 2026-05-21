@@ -4,8 +4,9 @@ import authMiddleware from '../middleware/auth';
 import { AppVariables } from '../types';
 import { errorResponse, successResponse } from '../lib/response';
 import { HTTP } from '../lib/httpCodes';
-import { isClubMember, parseValidNumber } from '../lib/utlis';
+import { isClubAdmin, isClubMember, parseParams, parseValidNumber } from '../lib/utlis';
 import { BookStatus } from '@prisma/client';
+import { BOOK_STATUS } from '../lib/bookStatus';
 
 
 const clubBooksRouter = new Hono<{ Variables: AppVariables }>
@@ -18,7 +19,6 @@ clubBooksRouter.get('/:id/books', async (context) => {
         return errorResponse(context, 'Invalid number', 400);
     }
     const status = context.req.query('status') as BookStatus | undefined;
-
 
     const books = await prisma.book.findMany({
         where: {
@@ -80,7 +80,81 @@ clubBooksRouter.post('/:id/books', authMiddleware, async (context) => {
     return successResponse(context, book);
 
 });
-// PATCH /clubs/:id/books/:bookId
+
+// PATCH /clubs/:id/books/:bookId -transition status
+clubBooksRouter.patch('/:id/books/:bookId', authMiddleware, async (context) => {
+    const userId = context.get('userId');
+
+    const { params, errors } = parseParams({
+        clubId: context.req.param('id'),
+        bookId: context.req.param('bookId')
+    })
+
+    if (errors.length > 0) {
+        return errorResponse(context, errors, HTTP.BAD_REQUEST)
+    }
+
+    const { clubId, bookId } = params
+    const { newStatus } = await context.req.json();
+    if (!newStatus) {
+        return errorResponse(context, 'newStatus is required', HTTP.BAD_REQUEST)
+    }
+    const isAdmin = await isClubAdmin(userId, clubId);
+    if (!isAdmin) {
+        return errorResponse(context, 'Unauthorized', HTTP.UNAUTHORIZED);
+    }
+
+    if (newStatus != BOOK_STATUS.READING && newStatus != BOOK_STATUS.COMPLETED) {
+        return errorResponse(context, `Only ${BOOK_STATUS.READING} and ${BOOK_STATUS.COMPLETED} permited`, HTTP.BAD_REQUEST);
+    }
+
+    const currentBook = await prisma.book.findFirst({
+        where: {
+            id: bookId,
+            clubId,
+            deletedAt: null
+        }
+    });
+    if (!currentBook) {
+        return errorResponse(context, 'book not found', HTTP.BAD_REQUEST)
+    }
+    if (currentBook.status === BOOK_STATUS.COMPLETED) {
+        return errorResponse(context, 'Book is completed', HTTP.BAD_REQUEST);
+    }
+    if (currentBook.status === BOOK_STATUS.READING && newStatus === BOOK_STATUS.READING) {
+        return errorResponse(context, 'Book is READING status ', HTTP.BAD_REQUEST);
+    }
+
+    if (currentBook.status === BOOK_STATUS.PROPOSED && newStatus === BOOK_STATUS.COMPLETED) {
+        return errorResponse(context, 'Transition Error. Only can make a transition from PROPOSED to READING. book is in PROPOSED status', HTTP.BAD_REQUEST);
+    }
+
+    const data = {
+        status: newStatus,
+        ...(newStatus === BOOK_STATUS.READING ? { startedAt: new Date() } : { completedAt: new Date() })
+    }
+    if (newStatus === BOOK_STATUS.READING) {
+        const readingBook = await prisma.book.findFirst({
+            where: {
+                clubId,
+                status: BOOK_STATUS.READING,
+                deletedAt: null
+            }
+        })
+
+        if (readingBook) {
+            return errorResponse(context, 'There is already a book being read', HTTP.CONFLICT)
+        }
+    }
+    const updatedBook = await prisma.book.update({
+        where: {
+            id: bookId
+        },
+        data
+    });
+    return successResponse(context, updatedBook);
+});
+
 // DELETE /clubs/:id/books/:bookId
 
 
