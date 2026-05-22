@@ -9,6 +9,7 @@ import { errorResponse } from './lib/response.js'
 import clubsRouter from './routes/clubs.js'
 import booksRouter from './routes/books.js'
 import clubBooksRouter from './routes/clubBooks.js'
+import voteRouter from './routes/votes.js'
 
 
 
@@ -44,6 +45,7 @@ app.route('/auth', authRouter);
 app.route('/users', usersRouter);
 app.route('/clubs', clubsRouter);
 app.route('/clubs', clubBooksRouter);
+app.route('/clubs', voteRouter);
 app.route('/books', booksRouter);
 
 
