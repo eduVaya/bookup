@@ -1,3 +1,4 @@
+import { ClubMember } from '@prisma/client';
 import prisma from '../lib/prisma';
 
 export const parseValidNumber = (number: unknown): number | null => {
@@ -42,6 +43,17 @@ export const isClubMember = async (userId: number, clubId: number): Promise<bool
         }
     });
     return !!existingMember;
+}
+
+export const getClubMember = async (userId: number, clubId: number): Promise<ClubMember | null> => {
+    const clubMember = await prisma.clubMember.findFirst({
+        where: {
+            userId,
+            clubId,
+            deletedAt: null
+        }
+    });
+    return clubMember;
 }
 
 export const softDelete = async (model: any, id: number, deletedBy: number) => {

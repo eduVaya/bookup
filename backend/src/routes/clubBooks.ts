@@ -4,9 +4,10 @@ import authMiddleware from '../middleware/auth';
 import { AppVariables } from '../types';
 import { errorResponse, successResponse } from '../lib/response';
 import { HTTP } from '../lib/httpCodes';
-import { isClubAdmin, isClubMember, parseParams, parseValidNumber } from '../lib/utlis';
+import { getClubMember, isClubAdmin, isClubMember, parseParams, parseValidNumber } from '../lib/utlis';
 import { BookStatus } from '@prisma/client';
 import { BOOK_STATUS } from '../lib/bookStatus';
+import { CLUB_MEMBER_ROLES } from '../lib/clubMemberRoles';
 
 
 const clubBooksRouter = new Hono<{ Variables: AppVariables }>
@@ -81,7 +82,7 @@ clubBooksRouter.post('/:id/books', authMiddleware, async (context) => {
 
 });
 
-// PATCH /clubs/:id/books/:bookId -transition status
+// PATCH /clubs/:id/books/:bookId -transition status TODO: verify this process. 
 clubBooksRouter.patch('/:id/books/:bookId', authMiddleware, async (context) => {
     const userId = context.get('userId');
 
@@ -156,6 +157,59 @@ clubBooksRouter.patch('/:id/books/:bookId', authMiddleware, async (context) => {
 });
 
 // DELETE /clubs/:id/books/:bookId
+clubBooksRouter.delete('/:id/books/:bookId', authMiddleware, async (context) => {
+    const userId = context.get('userId');
+
+    const { params, errors } = parseParams({
+        clubId: context.req.param('id'),
+        bookId: context.req.param('bookId')
+    });
+
+    if (errors.length > 0) {
+        return errorResponse(context, errors, HTTP.BAD_REQUEST)
+    }
+
+    const { clubId, bookId } = params;
+
+    const clubMember = await getClubMember(userId, clubId);
+    if (!clubMember) {
+        return errorResponse(context, 'User is not a member', HTTP.FORBIDDEN);
+    }
+
+    const book = await prisma.book.findFirst({
+        where: {
+            id: bookId,
+            clubId,
+            deletedAt: null
+        }
+    });
+
+    if (!book) {
+        return errorResponse(context, 'Book not found', HTTP.BAD_REQUEST);
+    }
+
+    const isAdmin = clubMember.role === CLUB_MEMBER_ROLES.ADMIN;
+
+    if (book.proposedBy !== userId && !isAdmin) {
+        return errorResponse(context, 'Unauthorized', HTTP.UNAUTHORIZED);
+    }
+    if (book.status === BOOK_STATUS.READING) {
+        return errorResponse(context, `Cannot delete books that are in ${BOOK_STATUS.READING} state`, HTTP.BAD_REQUEST);
+    }
+
+    const deletedBook = await prisma.book.update({
+        where: {
+            id: bookId,
+            clubId: clubId
+        },
+        data: {
+            deletedAt: new Date(),
+            deletedBy: userId
+        }
+    });
+    return successResponse(context, deletedBook);
+
+});
 
 
 export default clubBooksRouter;
