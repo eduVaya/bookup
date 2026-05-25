@@ -20,7 +20,8 @@
     "hono": "^4.12.16",
     "jsonwebtoken": "^9.0.3",
     "nanoid": "^5.1.11",
-    "prisma": "^6.19.3"
+    "prisma": "^6.19.3",
+    "winston": "^3.19.0"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",

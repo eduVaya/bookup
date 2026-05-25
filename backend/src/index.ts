@@ -2,6 +2,8 @@ import { serve } from '@hono/node-server'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { logger } from 'hono/logger'
+import appLogger from './lib/logger.js'
+
 import 'dotenv/config'
 import authRouter from './routes/auth.js'
 import usersRouter from './routes/users.js'
@@ -27,7 +29,13 @@ app.use('*', cors({
 
 // Global error handler
 app.onError((error, context) => {
-    // TODO: show error in development. in prod just server error and log somewhere. Maybe made a ui.
+    // TODO: Store error no database and make a ui.
+    appLogger.error(error.message, {
+        stack: error.stack,
+        path: context.req.path,
+        method: context.req.method
+    })
+
     if (process.env.NODE_ENV === 'development') {
         console.trace();
         return errorResponse(context, error.message, 500)
