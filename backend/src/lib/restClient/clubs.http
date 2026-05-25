@@ -1,0 +1,44 @@
+# POST http://localhost:3000/clubs HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc3ODk1MDU3NH0.E4flSnW62onG6NBvJ186TozmHX-RS6hj1KD6epY_ZW8
+
+# {
+#   "name": 1234,
+#   "description": "testing description"
+# }
+
+# PATCH http://localhost:3000/clubs/1 HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiZWR1YXJkbzNAdGVzdC5jb20iLCJleHAiOjE3Nzg5NTU2MTR9.KWgbMPtP8T7CDgpkMGmipWxxng7Ovtj-gTtCfD3Q6Wk
+
+# {
+#   "name": "Editado",
+#   "description": "testing editado"
+# }
+
+# POST http://localhost:3000/clubs/join HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjIsImVtYWlsIjoiZWR1YXJkbzNAdGVzdC5jb20iLCJleHAiOjE3NzkwMjE0MTB9.iOKgApsdSTcPOkwheUXPi8LB-fIZDA0vSQcX6T_fBpQ
+
+# {
+#   "inviteCode": "PT-RcwQo6XSR0LHO3GyU3"
+# }
+
+DELETE http://localhost:3000/clubs/1/member/2 HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc3OTAzMjIzNX0.95VYawSeKAejhki7mVX6OeKb-aHyp0zTjXnMPE4qqEU
+
+
+# GET http://localhost:3000/clubs/mine HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc3ODk1MzMxNH0.rE8nvdW8CBJeU4LbJR3K62E5cuCfFi_WtVQfZ2Zm9qA
+
+
+# GET http://localhost:3000/clubs/1 HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc3ODk1MzMxNH0.rE8nvdW8CBJeU4LbJR3K62E5cuCfFi_WtVQfZ2Zm9qA
+
+
+# GET http://localhost:3000/clubs/1/members HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc3ODk1MzMxNH0.rE8nvdW8CBJeU4LbJR3K62E5cuCfFi_WtVQfZ2Zm9qA

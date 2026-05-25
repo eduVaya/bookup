@@ -3,7 +3,7 @@ import prisma from '../lib/prisma.js'
 import type { AppVariables, UpdateUserPayload } from '../types/index.js'
 import { errorResponse, successResponse } from '../lib/response.js'
 import authMiddleware from '../middleware/auth.js'
-import { parseValidNumber } from '../lib/utlis.js'
+import { parseValidNumber } from '../lib/utils.js'
 
 const usersRouter = new Hono<{ Variables: AppVariables }>();
 

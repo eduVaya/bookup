@@ -22,3 +22,8 @@ export interface UpdateClubPayload {
     description?: string
     isPublic?: boolean
 }
+
+export interface PostVoteParams {
+    bookId: number
+    clubId: number
+}

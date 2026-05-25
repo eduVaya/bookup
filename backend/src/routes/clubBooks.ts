@@ -4,7 +4,7 @@ import authMiddleware from '../middleware/auth';
 import { AppVariables } from '../types';
 import { errorResponse, successResponse } from '../lib/response';
 import { HTTP } from '../lib/httpCodes';
-import { getClubMember, isClubAdmin, isClubMember, parseParams, parseValidNumber } from '../lib/utlis';
+import { getClubMember, isClubAdmin, isClubMember, parseParams, parseValidNumber } from '../lib/utils';
 import { BookStatus } from '@prisma/client';
 import { BOOK_STATUS } from '../lib/bookStatus';
 import { CLUB_MEMBER_ROLES } from '../lib/clubMemberRoles';
@@ -106,7 +106,7 @@ clubBooksRouter.patch('/:id/books/:bookId', authMiddleware, async (context) => {
     }
 
     if (newStatus != BOOK_STATUS.READING && newStatus != BOOK_STATUS.COMPLETED) {
-        return errorResponse(context, `Only ${BOOK_STATUS.READING} and ${BOOK_STATUS.COMPLETED} permited`, HTTP.BAD_REQUEST);
+        return errorResponse(context, `Only ${BOOK_STATUS.READING} and ${BOOK_STATUS.COMPLETED} permitted`, HTTP.BAD_REQUEST);
     }
 
     const currentBook = await prisma.book.findFirst({

@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { nanoid } from 'nanoid';
 import prisma from '../lib/prisma';
 import { errorResponse, successResponse } from '../lib/response';
-import { isClubAdmin, isClubMember, parseValidNumber } from '../lib/utlis';
+import { isClubAdmin, isClubMember, parseValidNumber } from '../lib/utils';
 import authMiddleware from '../middleware/auth';
 import { AppVariables, UpdateClubPayload } from '../types';
 
@@ -117,7 +117,7 @@ clubsRouter.post('/join', authMiddleware, async (context) => {
         }
     });
     if (!club) {
-        return errorResponse(context, 'Club not found or incorrect inviite code', 404);
+        return errorResponse(context, 'Club not found or incorrect invite code', 404);
     }
     const existingMember = await prisma.clubMember.findUnique({
         where: {

@@ -1,0 +1,30 @@
+# POST http://localhost:3000/auth/register HTTP/1.1
+# content-type: application/json
+
+# {
+#   "email": "eduardo3@test.com",
+#   "password": "123456",
+#   "name": "Eduardo 3"
+# }
+
+POST http://localhost:3000/auth/login HTTP/1.1
+content-type: application/json
+
+{
+  "email": "eduardo@test.com",
+  "password": "123456"
+}
+
+
+# POST http://localhost:3000/auth/login HTTP/1.1
+# content-type: application/json
+
+# {
+#   "email": "eduardo3@test.com",
+#   "password": "123456"
+# }
+
+
+# GET http://localhost:3000/auth/me HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc3ODMzMzA0N30.4lntqzTLgqnvitYNJ1tVRpgn5e5egbxGyLXt4SQyjEw

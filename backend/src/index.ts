@@ -50,7 +50,7 @@ app.route('/books', booksRouter);
 
 
 app.get('/', (context) => {
-    return context.json({ message: 'BookUp API runnig' });
+    return context.json({ message: 'BookUp API running' });
 });
 
 const PORT = Number(process.env.PORT) || 3000;

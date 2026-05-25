@@ -1,0 +1,3 @@
+GET http://localhost:3000/books/search?q=A Game of Thrones HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc3ODk1MzMxNH0.rE8nvdW8CBJeU4LbJR3K62E5cuCfFi_WtVQfZ2Zm9qA

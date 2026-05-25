@@ -1,0 +1,14 @@
+# GET http://localhost:3000/users/1 HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc3ODMzMzA0N30.4lntqzTLgqnvitYNJ1tVRpgn5e5egbxGyLXt4SQyjEw
+
+
+
+PATCH http://localhost:3000/users/1 HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc3ODMzMzA0N30.4lntqzTLgqnvitYNJ1tVRpgn5e5egbxGyLXt4SQyjEw
+
+{
+  "name": "eduardo3",
+  "avatar": "test23"
+}
