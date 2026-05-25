@@ -66,7 +66,7 @@ export const getBook = async (bookId: number, clubId: number) => {
         select: {
             status: true
         }
-    })
+    });
 }
 
 export const getSession = async (sessionId: number, clubId: number) => {
@@ -75,8 +75,14 @@ export const getSession = async (sessionId: number, clubId: number) => {
             id: sessionId,
             clubId,
             deletedAt: null
+        },
+        select: {
+            id: true,
+            scheduledAt: true,
+            title: true,
+            location: true
         }
-    })
+    });
 }
 
 export const softDelete = async (model: any, id: number, deletedBy: number) => {

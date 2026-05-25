@@ -11,6 +11,7 @@ import booksRouter from './routes/books.js'
 import clubBooksRouter from './routes/clubBooks.js'
 import voteRouter from './routes/votes.js'
 import sessionRouter from './routes/sessions.js'
+import attendanceRouter from './routes/attendance.js'
 
 
 
@@ -48,6 +49,7 @@ app.route('/clubs', clubsRouter);
 app.route('/clubs', clubBooksRouter);
 app.route('/clubs', voteRouter);
 app.route('/clubs', sessionRouter);
+app.route('/clubs', attendanceRouter);
 app.route('/books', booksRouter);
 
 

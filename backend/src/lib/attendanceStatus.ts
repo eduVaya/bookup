@@ -1,0 +1,5 @@
+export const ATTENDANCE_STATUS = {
+    ATTENDING: 'ATTENDING',
+    NOT_ATTENDING: 'NOT_ATTENDING',
+    MAYBE: 'MAYBE'
+} as const

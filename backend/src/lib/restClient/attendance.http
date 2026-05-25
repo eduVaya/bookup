@@ -1,0 +1,21 @@
+# POST http://localhost:3000/clubs/1/sessions/2/attendance HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc4MDMxOTk3N30.lpiZELMSF8k0d_i6jpw1JmKWFqvqPZj5tS6jWgZkAEs
+
+# {
+#     "status": "MAYBE"
+# }
+
+
+# PATCH http://localhost:3000/clubs/1/sessions/2/attendance HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc4MDMxOTk3N30.lpiZELMSF8k0d_i6jpw1JmKWFqvqPZj5tS6jWgZkAEs
+
+# {
+#     "status": "ATTENDING"
+# }
+
+
+GET http://localhost:3000/clubs/1/sessions/2/attendance HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc4MDMxOTk3N30.lpiZELMSF8k0d_i6jpw1JmKWFqvqPZj5tS6jWgZkAEs
