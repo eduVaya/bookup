@@ -43,10 +43,19 @@ app.notFound((context) => {
     }, 404)
 })
 
-// routes
+app.get('/', (context) => {
+    return context.json({ message: 'BookUp API running' });
+});
+
+
+// Auth & User
 app.route('/auth', authRouter);
 app.route('/users', usersRouter);
+
+// Book
 app.route('/books', booksRouter);
+
+// Clubs
 app.route('/clubs', clubsRouter);
 app.route('/clubs', clubBooksRouter);
 app.route('/clubs', voteRouter);
@@ -55,13 +64,7 @@ app.route('/clubs', attendanceRouter);
 app.route('/clubs', reviewsRouter);
 
 
-
-app.get('/', (context) => {
-    return context.json({ message: 'BookUp API running' });
-});
-
 const PORT = Number(process.env.PORT) || 3000;
-
 
 serve({
     fetch: app.fetch,
