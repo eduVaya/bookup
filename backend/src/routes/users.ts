@@ -8,7 +8,7 @@ import { parseValidNumber } from '../lib/utils.js'
 const usersRouter = new Hono<{ Variables: AppVariables }>();
 
 
-// GET /:id
+// GET - Public
 usersRouter.get('/:id', async (context) => {
     const id = parseValidNumber(context.req.param('id'));
     if (!id) {
@@ -30,7 +30,7 @@ usersRouter.get('/:id', async (context) => {
 });
 
 
-// PATCH /:id
+// PATCH - Private
 usersRouter.patch('/:id', authMiddleware, async (context) => {
     const { name, avatar } = await context.req.json();
     const id = parseValidNumber(context.req.param('id'));

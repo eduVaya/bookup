@@ -9,7 +9,7 @@ import { BOOK_STATUS } from '../lib/bookStatus';
 
 const voteRouter = new Hono<{ Variables: AppVariables }>;
 
-// POST — vote for a book
+// POST — Private
 voteRouter.post('/:id/books/:bookId/votes', authMiddleware, async (context) => {
     const userId = context.get('userId');
 
@@ -53,7 +53,7 @@ voteRouter.post('/:id/books/:bookId/votes', authMiddleware, async (context) => {
 
 });
 
-// DELETE /clubs/:id/books/:bookId/votes — remove vote
+// DELETE - Private
 voteRouter.delete('/:id/books/:bookId/votes', authMiddleware, async (context) => {
     const userId = context.get('userId');
 
@@ -111,7 +111,7 @@ voteRouter.delete('/:id/books/:bookId/votes', authMiddleware, async (context) =>
 
 });
 
-// GET /clubs/:id/books/:bookId/votes — get all votes
+// GET - Public
 voteRouter.get('/:id/books/:bookId/votes', async (context) => {
     const { params, errors } = parseParams({
         clubId: context.req.param('id'),

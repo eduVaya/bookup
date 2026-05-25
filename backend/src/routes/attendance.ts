@@ -10,7 +10,7 @@ import { ATTENDANCE_STATUS } from '../lib/attendanceStatus';
 
 const attendanceRouter = new Hono<{ Variables: AppVariables }>;
 
-
+// POST - Private
 attendanceRouter.post('/:id/sessions/:sessionId/attendance', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const { status } = await context.req.json();
@@ -59,6 +59,7 @@ attendanceRouter.post('/:id/sessions/:sessionId/attendance', authMiddleware, asy
 
 });
 
+// PATCH - Private
 attendanceRouter.patch('/:id/sessions/:sessionId/attendance', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const { status } = await context.req.json();
@@ -107,6 +108,7 @@ attendanceRouter.patch('/:id/sessions/:sessionId/attendance', authMiddleware, as
 
 });
 
+// GET - Public
 attendanceRouter.get('/:id/sessions/:sessionId/attendance', async (context) => {
     const { params, errors } = parseParams({
         clubId: context.req.param('id'),

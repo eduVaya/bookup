@@ -10,7 +10,7 @@ import { BOOK_STATUS } from '../lib/bookStatus';
 
 const sessionRouter = new Hono<{ Variables: AppVariables }>;
 
-// GET /clubs/:id/sessions
+// GET - Public
 sessionRouter.get('/:id/sessions', async (context) => {
 
     const { params, errors } = parseParams({
@@ -45,7 +45,7 @@ sessionRouter.get('/:id/sessions', async (context) => {
 
 });
 
-// POST /clubs/:id/sessions
+// POST - Private
 sessionRouter.post('/:id/sessions', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const { params, errors } = parseParams({
@@ -103,7 +103,7 @@ sessionRouter.post('/:id/sessions', authMiddleware, async (context) => {
     return successResponse(context, session, HTTP.CREATED);
 });
 
-// PATCH  /clubs/:id/sessions/:sessionId
+// PATCH  - Private
 sessionRouter.patch('/:id/sessions/:sessionId', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const { params, errors } = parseParams({
@@ -147,7 +147,7 @@ sessionRouter.patch('/:id/sessions/:sessionId', authMiddleware, async (context) 
     return successResponse(context, updatedSession);
 });
 
-// DELETE /clubs/:id/sessions/:sessionId
+// DELETE - Private
 sessionRouter.delete('/:id/sessions/:sessionId', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const { params, errors } = parseParams({

@@ -7,7 +7,7 @@ import { HTTP } from '../lib/httpCodes';
 
 const booksRouter = new Hono<{ Variables: AppVariables }>
 
-// GET /books/search?q= — search in Google Books API
+// GET - Public - search in Google Books API
 booksRouter.get('/search', async (context) => {
     const search = context.req.query('q');
     if (!search) {

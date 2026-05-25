@@ -13,7 +13,7 @@ import { CLUB_MEMBER_ROLES } from '../lib/clubMemberRoles';
 const clubBooksRouter = new Hono<{ Variables: AppVariables }>
 
 
-// GET /clubs/:id/books
+// GET - Public
 clubBooksRouter.get('/:id/books', async (context) => {
     const clubId = parseValidNumber(context.req.param('id'));
     if (!clubId) {
@@ -51,7 +51,7 @@ clubBooksRouter.get('/:id/books', async (context) => {
     return successResponse(context, books);
 });
 
-// POST /clubs/:id/books - propose book
+// POST - Private
 clubBooksRouter.post('/:id/books', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const clubId = parseValidNumber(context.req.param('id'));
@@ -82,7 +82,7 @@ clubBooksRouter.post('/:id/books', authMiddleware, async (context) => {
 
 });
 
-// PATCH /clubs/:id/books/:bookId -transition status TODO: verify this process. 
+// PATCH - Private
 clubBooksRouter.patch('/:id/books/:bookId', authMiddleware, async (context) => {
     const userId = context.get('userId');
 
@@ -156,7 +156,7 @@ clubBooksRouter.patch('/:id/books/:bookId', authMiddleware, async (context) => {
     return successResponse(context, updatedBook);
 });
 
-// DELETE /clubs/:id/books/:bookId
+// DELETE - Private
 clubBooksRouter.delete('/:id/books/:bookId', authMiddleware, async (context) => {
     const userId = context.get('userId');
 

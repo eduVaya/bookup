@@ -12,7 +12,7 @@ const generateExpiration = () => {
 }
 const authRouter = new Hono<{ Variables: AppVariables }>()
 
-// POST /auth/register
+// POST - Public
 authRouter.post('/register', async (context) => {
     const { email, password, name } = await context.req.json();
 
@@ -60,7 +60,7 @@ authRouter.post('/register', async (context) => {
     }, 201);
 });
 
-// POST /auth / login
+// POST - Public
 authRouter.post('/login', async (context) => {
     const { email, password } = await context.req.json()
 
@@ -101,7 +101,7 @@ authRouter.post('/login', async (context) => {
     }, 201);
 })
 
-// GET /auth/me
+// GET - Private
 authRouter.get('/me', authMiddleware, async (context) => {
     const userId = context.get('userId');
 

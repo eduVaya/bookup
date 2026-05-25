@@ -8,7 +8,7 @@ import { AppVariables, UpdateClubPayload } from '../types';
 
 const clubsRouter = new Hono<{ Variables: AppVariables }>();
 
-// POST /clubs PRIVATE
+// POST - Private
 clubsRouter.post('/', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const { name, description, isPublic } = await context.req.json();
@@ -46,7 +46,7 @@ clubsRouter.post('/', authMiddleware, async (context) => {
 
 });
 
-// PATCH /clubs/:id PRIVATE
+// PATCH - Private
 clubsRouter.patch('/:id', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const id = parseValidNumber(context.req.param('id'));
@@ -79,7 +79,7 @@ clubsRouter.patch('/:id', authMiddleware, async (context) => {
     return successResponse(context, updatedClub);
 });
 
-// DELETE /clubs/:id
+// DELETE - Private
 clubsRouter.delete('/:id', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const id = parseValidNumber(context.req.param('id'));
@@ -102,7 +102,7 @@ clubsRouter.delete('/:id', authMiddleware, async (context) => {
     return successResponse(context, deletedClub);
 });
 
-// POST /clubs/join
+// POST - Private
 clubsRouter.post('/join', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const { inviteCode } = await context.req.json();
@@ -142,7 +142,7 @@ clubsRouter.post('/join', authMiddleware, async (context) => {
     return successResponse(context, clubMember);
 });
 
-// DELETE /clubs/:id/members/:userId
+// DELETE - Private
 clubsRouter.delete('/:id/member/:userId', authMiddleware, async (context) => {
     const userId = context.get('userId');
 
@@ -178,7 +178,7 @@ clubsRouter.delete('/:id/member/:userId', authMiddleware, async (context) => {
 
 });
 
-// GET /clubs PUBLIC
+// GET - Public
 clubsRouter.get('/', async (context) => {
 
     const clubs = await prisma.club.findMany({
@@ -209,7 +209,7 @@ clubsRouter.get('/', async (context) => {
     return successResponse(context, clubs);
 });
 
-// GET /clubs/mine PRIVATE
+// GET - Private
 clubsRouter.get('/mine', authMiddleware, async (context) => {
     const userId = context.get('userId');
 
@@ -239,7 +239,7 @@ clubsRouter.get('/mine', authMiddleware, async (context) => {
     return successResponse(context, myClubs);
 });
 
-// GET /clubs/:id
+// GET - Public
 clubsRouter.get('/:id', async (context) => {
     const id = parseValidNumber(context.req.param('id'));
     if (!id) {
@@ -280,7 +280,7 @@ clubsRouter.get('/:id', async (context) => {
     return successResponse(context, club);
 });
 
-// GET /clubs/:id/members
+// GET - Public
 clubsRouter.get('/:id/members', async (context) => {
     const id = parseValidNumber(context.req.param('id'));
     if (!id) {
