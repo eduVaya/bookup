@@ -1,22 +1,22 @@
-POST http://localhost:3000/clubs/1/books HTTP/1.1
+# POST http://localhost:3000/clubs/1/books HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc4MDMxOTk3N30.lpiZELMSF8k0d_i6jpw1JmKWFqvqPZj5tS6jWgZkAEs
+
+# {
+#   "googleBooksId": "5NomkK4EV68C",
+#   "title": "A Game of Thrones",
+#   "author": "George R. R. Martin",
+#   "coverUrl": "http://books.google.com/books/content?id=5NomkK4EV68C&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
+#   "proposedBy": 2
+# }
+
+PATCH http://localhost:3000/clubs/1/books/2 HTTP/1.1
 content-type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc4MDMxOTk3N30.lpiZELMSF8k0d_i6jpw1JmKWFqvqPZj5tS6jWgZkAEs
 
 {
-  "googleBooksId": "5NomkK4EV68C",
-  "title": "A Game of Thrones",
-  "author": "George R. R. Martin",
-  "coverUrl": "http://books.google.com/books/content?id=5NomkK4EV68C&printsec=frontcover&img=1&zoom=1&edge=curl&source=gbs_api",
-  "proposedBy": 2
+    "newStatus": "READING"
 }
-
-# PATCH http://localhost:3000/clubs/1/books/1 HTTP/1.1
-# content-type: application/json
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc3OTk4NTk4Nn0.M_UdGQQoWtalpumnq2dRC7EeFaXuLBV3xBv7aVaswxc
-
-# {
-#     "newStatus": "READING"
-# }
 
 # DELETE http://localhost:3000/clubs/1/books/1 HTTP/1.1
 # content-type: application/json

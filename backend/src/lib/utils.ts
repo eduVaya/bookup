@@ -56,6 +56,29 @@ export const getClubMember = async (userId: number, clubId: number): Promise<Clu
     return clubMember;
 }
 
+export const getBook = async (bookId: number, clubId: number) => {
+    return prisma.book.findFirst({
+        where: {
+            id: bookId,
+            clubId,
+            deletedAt: null
+        },
+        select: {
+            status: true
+        }
+    })
+}
+
+export const getSession = async (sessionId: number, clubId: number) => {
+    return await prisma.session.findFirst({
+        where: {
+            id: sessionId,
+            clubId,
+            deletedAt: null
+        }
+    })
+}
+
 export const softDelete = async (model: any, id: number, deletedBy: number) => {
     return await model.update({
         where: { id },

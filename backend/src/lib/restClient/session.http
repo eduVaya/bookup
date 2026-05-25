@@ -1,0 +1,37 @@
+# POST http://localhost:3000/clubs/1/sessions HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc4MDMxOTk3N30.lpiZELMSF8k0d_i6jpw1JmKWFqvqPZj5tS6jWgZkAEs
+
+# {
+#     "bookId": 2,
+#     "title": "Cap 10 al 20",
+#     "scheduledAt": "2026-06-10T14:07:03.099Z",
+#     "location": "https://maps.app.goo.gl/xcSz71vbB8xr4nhu6"
+# }
+
+
+# PATCH http://localhost:3000/clubs/1/sessions/1 HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc4MDMxOTk3N30.lpiZELMSF8k0d_i6jpw1JmKWFqvqPZj5tS6jWgZkAEs
+
+# {
+#     "bookId": 2,
+#     "scheduledAt": "2026-06-10T20:07:03.099Z"
+# }
+
+# "scheduledAt": "2026-06-10T14:07:03.099Z",
+#     "location": "https://maps.app.goo.gl/xcSz71vbB8xr4nhu6"
+
+
+# DELETE http://localhost:3000/clubs/1/sessions/1 HTTP/1.1
+# content-type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc4MDMxOTk3N30.lpiZELMSF8k0d_i6jpw1JmKWFqvqPZj5tS6jWgZkAEs
+
+# {
+#     "sessionId": 2,
+#     "clubId": 1
+# }
+
+GET http://localhost:3000/clubs/1/sessions HTTP/1.1
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc4MDMxOTk3N30.lpiZELMSF8k0d_i6jpw1JmKWFqvqPZj5tS6jWgZkAEs

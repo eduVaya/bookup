@@ -6,7 +6,6 @@ import { errorResponse, successResponse } from '../lib/response';
 import { HTTP } from '../lib/httpCodes';
 import { getClubMember, isClubAdmin, isClubMember, parseParams } from '../lib/utils';
 import { BOOK_STATUS } from '../lib/bookStatus';
-import { CLUB_MEMBER_ROLES } from '../lib/clubMemberRoles';
 
 const voteRouter = new Hono<{ Variables: AppVariables }>;
 

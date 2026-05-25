@@ -23,6 +23,12 @@ export interface UpdateClubPayload {
     isPublic?: boolean
 }
 
+export interface UpdateSessionPayload {
+    title?: string
+    scheduledAt?: Date
+    location?: string
+}
+
 export interface PostVoteParams {
     bookId: number
     clubId: number
