@@ -29,6 +29,11 @@ export interface UpdateSessionPayload {
     location?: string
 }
 
+export interface UpdateReviewPayload {
+    rating?: number
+    content?: string
+}
+
 export interface PostVoteParams {
     bookId: number
     clubId: number

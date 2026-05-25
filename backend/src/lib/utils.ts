@@ -24,7 +24,7 @@ export const isString = (value: unknown): boolean => {
     return typeof value === 'string';
 };
 
-// Databse Helper
+// Database Helper
 export const isClubAdmin = async (userId: number, clubId: number): Promise<boolean> => {
     const member = await prisma.clubMember.findUnique({
         where: {
@@ -57,7 +57,7 @@ export const getClubMember = async (userId: number, clubId: number): Promise<Clu
 }
 
 export const getBook = async (bookId: number, clubId: number) => {
-    return prisma.book.findFirst({
+    return await prisma.book.findFirst({
         where: {
             id: bookId,
             clubId,
@@ -85,12 +85,19 @@ export const getSession = async (sessionId: number, clubId: number) => {
     });
 }
 
-export const softDelete = async (model: any, id: number, deletedBy: number) => {
-    return await model.update({
-        where: { id },
-        data: {
-            deletedAt: new Date(),
-            deletedBy
+export const getReview = async (bookId: number, userId: number) => {
+    return await prisma.review.findFirst({
+        where: {
+            bookId,
+            userId,
+            deletedAt: null
+        },
+        select: {
+            id: true,
+            bookId: true,
+            rating: true,
+            content: true,
+            userId: true
         }
-    });
+    })
 }

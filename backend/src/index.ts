@@ -12,6 +12,7 @@ import clubBooksRouter from './routes/clubBooks.js'
 import voteRouter from './routes/votes.js'
 import sessionRouter from './routes/sessions.js'
 import attendanceRouter from './routes/attendance.js'
+import reviewsRouter from './routes/reviews.js'
 
 
 
@@ -45,12 +46,14 @@ app.notFound((context) => {
 // routes
 app.route('/auth', authRouter);
 app.route('/users', usersRouter);
+app.route('/books', booksRouter);
 app.route('/clubs', clubsRouter);
 app.route('/clubs', clubBooksRouter);
 app.route('/clubs', voteRouter);
 app.route('/clubs', sessionRouter);
 app.route('/clubs', attendanceRouter);
-app.route('/books', booksRouter);
+app.route('/clubs', reviewsRouter);
+
 
 
 app.get('/', (context) => {
