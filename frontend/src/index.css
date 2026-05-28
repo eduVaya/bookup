@@ -81,6 +81,23 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+
+  /* BookUp palette */
+  --bk-bg: #F5F0E4;
+  --bk-bg-card: #EDE8D8;
+  --bk-bg-input: #F5F0E4;
+  --bk-border: #D4C8A8;
+  --bk-border-light: #E4DCC8;
+  --bk-accent: #577146;
+  --bk-accent-hover: #3B4E3F;
+  --bk-accent-sage: #5C786E;
+  --bk-accent-teal: #3B4F52;
+  --bk-accent-brown: #553F33;
+  --bk-text-primary: #2A2A2A;
+  --bk-text-secondary: #7A6A58;
+  --bk-text-muted: #9A8A78;
+  --bk-toggle-bg: #D8E8D0;
+  --bk-toggle-inactive: #8AAA80;
 }
 
 .dark {
@@ -124,6 +141,8 @@
 
   body {
     @apply bg-background text-foreground;
+    background-color: var(--bk-bg);
+    color: var(--bk-text-primary);
   }
 
   html {

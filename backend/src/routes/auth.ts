@@ -5,6 +5,7 @@ import prisma from '../lib/prisma.js'
 import { errorResponse, successResponse } from '../lib/response.js'
 import type { JwtPayload, AppVariables } from '../types/index.js'
 import authMiddleware from '../middleware/auth.js'
+import { HTTP } from '../lib/httpCodes.js'
 
 
 const generateExpiration = () => {
@@ -65,7 +66,8 @@ authRouter.post('/login', async (context) => {
     const { email, password } = await context.req.json()
 
     if (!email || !password) {
-        return context.json({ error: 'Email and password are required' }, 400)
+
+        return errorResponse(context, 'Email and password are required', HTTP.BAD_REQUEST);
     }
 
     const user = await prisma.user.findUnique({
@@ -73,13 +75,14 @@ authRouter.post('/login', async (context) => {
     })
 
     if (!user) {
-        return context.json({ error: 'Invalid credentials' }, 401)
+
+        return errorResponse(context, 'Invalid credentials', HTTP.UNAUTHORIZED);
     }
 
     const passwordMatch = await bcrypt.compare(password, user.password)
 
     if (!passwordMatch) {
-        return context.json({ error: 'Invalid credentials' }, 401)
+        return errorResponse(context, 'Invalid credentials', HTTP.UNAUTHORIZED);
     }
 
     const payload: JwtPayload = {
