@@ -12,6 +12,16 @@ const getPublicClubs = async (search?: string): Promise<Club[]> => {
     }
 };
 
+const getMyClubs = async (): Promise<Club[]> => {
+    try {
+        const response = await api.get<ApiResponse<Club[]>>('/clubs/mine',);
+        return response.data.data;
+    } catch (error) {
+        return handleError(error);
+    }
+}
+
 export const clubsService = {
     getPublicClubs,
+    getMyClubs
 };

@@ -4,12 +4,16 @@ import HomePage from '@/pages/HomePage'
 import LoginPage from '@/pages/LoginPage'
 import LoadingScreen from '@/components/shared/LoadingScreen'
 import { useAuth } from '@/context/AuthContext'
+import ProfilePage from './pages/ProfilePage'
+import { Toaster } from '@/components/ui/sonner';
+
 
 function Layout() {
   return (
     <div className="min-h-screen" style={{ background: 'var(--bk-bg)' }}>
       <Navbar />
       <Outlet />
+      <Toaster />
     </div>
   )
 }
@@ -25,7 +29,7 @@ function AppRoutes() {
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/dashboard" element={<div className="p-4">Dashboard</div>} />
-        <Route path="/profile" element={<div className="p-4">Profile</div>} />
+        <Route path="/profile" element={<ProfilePage />} />
       </Route>
       <Route path="*" element={<div className="p-4">404</div>} />
     </Routes>

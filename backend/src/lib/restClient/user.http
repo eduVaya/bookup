@@ -4,11 +4,10 @@
 
 
 
-PATCH http://localhost:3000/users/1 HTTP/1.1
+PATCH http://localhost:3000/users/5 HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc3ODMzMzA0N30.4lntqzTLgqnvitYNJ1tVRpgn5e5egbxGyLXt4SQyjEw
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjUsImVtYWlsIjoiZWR1YXJkb0B0ZXN0LmNvbSIsImV4cCI6MTc4MDY4MzA5NH0.mCwa1v5A3lBlPHojxboEN-M9N9XhHVolS2YNGaFix_0
 
 {
-  "name": "eduardo3",
-  "avatar": "test23"
+  "name": "Eduardo F"
 }
