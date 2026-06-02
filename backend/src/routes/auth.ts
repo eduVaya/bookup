@@ -71,8 +71,11 @@ authRouter.post('/login', async (context) => {
     }
 
     const user = await prisma.user.findUnique({
-        where: { email }
-    })
+        where: {
+            email,
+            deletedAt: null
+        }
+    });
 
     if (!user) {
 

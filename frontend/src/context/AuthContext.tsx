@@ -70,3 +70,11 @@ export function useAuth() {
     }
     return context;
 }
+
+export function useAuthUser(): AuthContextType & { user: User } {
+    const context = useContext(AuthContext);
+    if (!context || !context.user) {
+        throw new Error('useAuthUser must be used within an authenticated route');
+    }
+    return context as AuthContextType & { user: User };
+}

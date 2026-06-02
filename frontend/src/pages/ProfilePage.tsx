@@ -1,22 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, useAuthUser } from "@/context/AuthContext";
 import { getErrors } from "@/lib/services/handleError";
 import { userService } from "@/lib/services/user.service";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { toast } from "sonner";
 import { uploadAvatar } from '@/lib/cloudinary';
-import { clubsService } from "@/lib/services/clubs.service";
-import { data } from "react-router-dom";
-
-
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+} from '@/components/ui/dialog';
+import { useNavigate } from "react-router-dom";
 
 function ProfilePage() {
-    const { user, updateUser } = useAuth();
-    if (!user) return null;
+    const navigate = useNavigate()
+    const { user, updateUser, logout } = useAuthUser();
+
     const [name, setName] = useState(user.name);
     const [avatar, setAvatar] = useState(user.avatar);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
     const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
@@ -42,7 +50,16 @@ function ProfilePage() {
             toast.error(errors[0]);
         }
     });
-
+    const deleteAccountMutation = useMutation({
+        mutationFn: () => userService.deleteAccount(user.id),
+        onSuccess: () => {
+            logout();
+            navigate('/');
+        },
+        onError: (error) => {
+            toast.error(getErrors(error)[0]);
+        }
+    });
     const handleSaveProfile = () => {
         if (!name || name.trim() === '') {
             toast.error('Name cannot be empty');
@@ -56,12 +73,10 @@ function ProfilePage() {
         editUserMutation.mutate();
     }
 
-    const { data: clubs, isLoading } = useQuery({
-        queryKey: ['myClubs', user.id],
-        queryFn: () => clubsService.getMyClubs()
+    const { data: stats, isLoading } = useQuery({
+        queryKey: ['userStats', user.id],
+        queryFn: () => userService.getUserStats(user.id)
     });
-
-
 
     return (
         <div className="flex flex-col items-center justify-center px-4 py-12 max-w-md mx-auto">
@@ -114,7 +129,7 @@ function ProfilePage() {
                     className="text-[12px]"
                     style={{ color: 'var(--bk-text-muted)' }}
                 >
-                    {user?.email}
+                    {user.email}
                 </p>
             </div>
 
@@ -123,9 +138,9 @@ function ProfilePage() {
                 style={{ background: 'var(--bk-bg-card)', border: '1px solid var(--bk-border)' }}
             >
                 {[
-                    { value: isLoading ? '...' : clubs?.length ?? 0, label: 'Clubs' },
-                    { value: 12, label: 'Books' },
-                    { value: 8, label: 'Reviews' },
+                    { value: isLoading ? '...' : stats?.clubs ?? 0, label: 'Clubs' },
+                    { value: isLoading ? '...' : stats?.books ?? 0, label: 'Books' },
+                    { value: isLoading ? '...' : stats?.reviews ?? 0, label: 'Reviews' },
                 ].map((stat, index, arr) => (
                     <div
                         key={stat.label}
@@ -218,11 +233,44 @@ function ProfilePage() {
                         variant="outline"
                         className="w-full font-semibold"
                         style={{ borderColor: '#C4A89A', color: '#8B5E52' }}
+                        onClick={() => setDeleteDialogOpen(true)}
                     >
                         Delete account
                     </Button>
                 </div>
             </div>
+
+            <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+                <DialogContent style={{ background: 'var(--bk-bg-card)', border: '1px solid var(--bk-border)' }}>
+                    <DialogHeader>
+                        <DialogTitle
+                            style={{ fontFamily: 'var(--font-serif)', color: 'var(--bk-text-primary)' }}
+                        >
+                            Delete account
+                        </DialogTitle>
+                        <DialogDescription style={{ color: 'var(--bk-text-muted)' }}>
+                            Are you sure you want to delete your account? This action cannot be undone.
+                            All your clubs, books and reviews will be permanently deleted.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter className="gap-2">
+                        <Button
+                            variant="outline"
+                            onClick={() => setDeleteDialogOpen(false)}
+                            style={{ borderColor: 'var(--bk-border)', color: 'var(--bk-text-secondary)' }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={() => deleteAccountMutation.mutate()}
+                            disabled={deleteAccountMutation.isPending}
+                            style={{ background: '#8B5E52', color: '#fff', border: 'none' }}
+                        >
+                            {deleteAccountMutation.isPending ? 'Deleting...' : 'Yes, delete account'}
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </div >
     )
 }

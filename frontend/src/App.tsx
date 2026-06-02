@@ -6,6 +6,7 @@ import LoadingScreen from '@/components/shared/LoadingScreen'
 import { useAuth } from '@/context/AuthContext'
 import ProfilePage from './pages/ProfilePage'
 import { Toaster } from '@/components/ui/sonner';
+import ProtectedRoute from '@/components/layout/ProtectedRoute';
 
 
 function Layout() {
@@ -28,12 +29,15 @@ function AppRoutes() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/dashboard" element={<div className="p-4">Dashboard</div>} />
-        <Route path="/profile" element={<ProfilePage />} />
+
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<div className="p-4">Dashboard</div>} />
+          <Route path="/profile" element={<ProfilePage />} />
+        </Route>
       </Route>
       <Route path="*" element={<div className="p-4">404</div>} />
     </Routes>
-  )
+  );
 }
 
 function App() {
