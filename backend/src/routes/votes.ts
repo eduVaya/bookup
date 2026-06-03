@@ -98,13 +98,9 @@ voteRouter.delete('/:id/books/:bookId/votes', authMiddleware, async (context) =>
         return errorResponse(context, 'Vote not found', HTTP.BAD_REQUEST)
     }
 
-    const deletedVote = await prisma.bookVote.update({
+    const deletedVote = await prisma.bookVote.delete({
         where: {
             id: vote.id
-        },
-        data: {
-            deletedAt: new Date(),
-            deletedBy: userId
         }
     });
     return successResponse(context, deletedVote);
