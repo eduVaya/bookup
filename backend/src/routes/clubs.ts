@@ -240,6 +240,13 @@ clubsRouter.get('/mine', authMiddleware, async (context) => {
             clubMembers: {
                 where: { userId, deletedAt: null },
                 select: { role: true }
+            },
+            _count: {
+                select: {
+                    clubMembers: {
+                        where: { deletedAt: null }
+                    }
+                }
             }
         }
     })
