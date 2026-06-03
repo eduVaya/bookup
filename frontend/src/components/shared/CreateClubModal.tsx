@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -11,14 +11,32 @@ import { toast } from 'sonner';
 interface CreateClubModalProps {
     open: boolean;
     onClose: () => void;
+    existingClub?: {
+        id: number;
+        name: string;
+        description: string;
+        isPublic: boolean;
+    };
 }
 
-function CreateClubModal({ open, onClose }: CreateClubModalProps) {
+function CreateClubModal({ open, onClose, existingClub }: CreateClubModalProps) {
+
     const navigate = useNavigate();
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
     const [isPublic, setIsPublic] = useState(true);
-
+    const queryClient = useQueryClient();
+    useEffect(() => {
+        if (existingClub) {
+            setName(existingClub.name);
+            setDescription(existingClub.description);
+            setIsPublic(existingClub.isPublic);
+        } else {
+            setName('');
+            setDescription('');
+            setIsPublic(true);
+        }
+    }, [existingClub, open]);
     const createClubMutation = useMutation({
         mutationFn: () => clubsService.createClub({ name, description, isPublic }),
         onSuccess: (data) => {
@@ -30,7 +48,18 @@ function CreateClubModal({ open, onClose }: CreateClubModalProps) {
             toast.error(getErrors(error)[0]);
         }
     });
-
+    const updateMutation = useMutation({
+        mutationFn: () => clubsService.updateClub(existingClub!.id, { name, description, isPublic }),
+        onSuccess: (data) => {
+            queryClient.invalidateQueries({ queryKey: ['club', existingClub!.id] });
+            queryClient.invalidateQueries({ queryKey: ['myClubs'] });
+            toast.success('Club updated!');
+            onClose();
+        },
+        onError: (error) => {
+            toast.error(getErrors(error)[0]);
+        }
+    });
     const handleSubmit = () => {
         if (!name.trim()) {
             toast.error('Club name is required');
@@ -40,7 +69,11 @@ function CreateClubModal({ open, onClose }: CreateClubModalProps) {
             toast.error('Description is required');
             return;
         }
-        createClubMutation.mutate();
+        if (existingClub) {
+            updateMutation.mutate();
+        } else {
+            createClubMutation.mutate();
+        }
     };
 
     const handleClose = () => {
@@ -60,7 +93,7 @@ function CreateClubModal({ open, onClose }: CreateClubModalProps) {
                     <DialogTitle
                         style={{ fontFamily: 'var(--font-serif)', color: 'var(--bk-text-primary)' }}
                     >
-                        Create a book club
+                        {existingClub ? 'Edit club' : 'Create a book club'}
                     </DialogTitle>
                 </DialogHeader>
 
@@ -149,10 +182,13 @@ function CreateClubModal({ open, onClose }: CreateClubModalProps) {
                         <Button
                             className="flex-1 font-semibold"
                             onClick={handleSubmit}
-                            disabled={createClubMutation.isPending}
+                            disabled={createClubMutation.isPending || updateMutation.isPending}
+
                             style={{ background: 'var(--bk-accent)', color: 'var(--bk-bg)' }}
                         >
-                            {createClubMutation.isPending ? 'Creating...' : 'Create club'}
+                            {createClubMutation.isPending || updateMutation.isPending
+                                ? 'Saving...'
+                                : existingClub ? 'Save changes' : 'Create club'}
                         </Button>
                     </div>
                 </div>

@@ -7,6 +7,11 @@ interface CreateClubParams {
     description: string;
     isPublic: boolean;
 }
+interface UpdateClubParams {
+    name?: string;
+    description?: string;
+    isPublic?: boolean;
+}
 
 const getPublicClubs = async (search?: string): Promise<Club[]> => {
     try {
@@ -45,9 +50,29 @@ const getClub = async (id: number): Promise<Club> => {
     }
 };
 
+const updateClub = async (clubId: number, params: UpdateClubParams): Promise<Club> => {
+    try {
+        const response = await api.patch<ApiResponse<Club>>(`/clubs/${clubId}`, params);
+        return response.data.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+
+const joinClub = async (inviteCode: string): Promise<Club> => {
+    try {
+        const response = await api.post<ApiResponse<Club>>('/clubs/join', { inviteCode });
+        return response.data.data;
+    } catch (error) {
+        return handleError(error);
+    }
+};
+
 export const clubsService = {
     getPublicClubs,
     getMyClubs,
     createClub,
-    getClub
+    getClub,
+    updateClub,
+    joinClub
 };

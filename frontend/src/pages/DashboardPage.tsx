@@ -5,11 +5,15 @@ import { Button } from '@/components/ui/button';
 import { useAuthUser } from '@/context/AuthContext';
 import CreateClubModal from '@/components/shared/CreateClubModal';
 import { clubsService } from '@/lib/services/clubs.service';
+import JoinClubModal from '@/components/shared/JoinClubModal';
+
 
 function DashboardPage() {
     const { user } = useAuthUser();
     const navigate = useNavigate();
     const [createClubOpen, setCreateClubOpen] = useState(false);
+    const [joinClubOpen, setJoinClubOpen] = useState(false);
+
 
     const { data: clubs, isLoading } = useQuery({
         queryKey: ['myClubs', user.id],
@@ -25,6 +29,13 @@ function DashboardPage() {
                 >
                     My clubs
                 </h1>
+                <Button
+                    variant="outline"
+                    onClick={() => setJoinClubOpen(true)}
+                    style={{ borderColor: 'var(--bk-accent)', color: 'var(--bk-accent)' }}
+                >
+                    Join club
+                </Button>
                 <Button
                     onClick={() => setCreateClubOpen(true)}
                     style={{ background: 'var(--bk-accent)', color: 'var(--bk-bg)' }}
@@ -107,6 +118,10 @@ function DashboardPage() {
             <CreateClubModal
                 open={createClubOpen}
                 onClose={() => setCreateClubOpen(false)}
+            />
+            <JoinClubModal
+                open={joinClubOpen}
+                onClose={() => setJoinClubOpen(false)}
             />
         </div>
     );

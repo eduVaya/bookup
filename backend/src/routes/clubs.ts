@@ -139,7 +139,7 @@ clubsRouter.post('/join', authMiddleware, async (context) => {
             role: true
         }
     });
-    return successResponse(context, clubMember);
+    return successResponse(context, { id: club.id });
 });
 
 // DELETE - Private
@@ -251,6 +251,7 @@ clubsRouter.get('/:id', async (context) => {
             deletedAt: null
         },
         select: {
+            id: true,
             name: true,
             description: true,
             isPublic: true,

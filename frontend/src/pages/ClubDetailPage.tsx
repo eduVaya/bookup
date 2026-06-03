@@ -13,6 +13,7 @@ import CreateSessionModal from '@/components/shared/CreateSessionModal';
 import ConfirmDialog from '@/components/shared/ConfirmDialog';
 import ReviewModal from '@/components/shared/ReviewModal';
 import CompletedBook from '@/components/shared/CompletedBook';
+import CreateClubModal from '@/components/shared/CreateClubModal';
 
 
 
@@ -27,6 +28,8 @@ function ClubDetailPage() {
     const [createSessionOpen, setCreateSessionOpen] = useState(false);
     const [bookToDelete, setBookToDelete] = useState<number | null>(null);
     const [sessionToDelete, setSessionToDelete] = useState<number | null>(null);
+    const [editClubOpen, setEditClubOpen] = useState(false);
+
     const [reviewBook, setReviewBook] = useState<{
         id: number;
         title: string;
@@ -172,6 +175,16 @@ function ClubDetailPage() {
                         >
                             {isAdmin ? 'Admin' : 'Member'}
                         </span>
+
+                    )}
+                    {isAdmin && (
+                        <button
+                            onClick={() => setEditClubOpen(true)}
+                            className="text-[11px] font-semibold px-2 py-1 rounded-lg"
+                            style={{ border: '1px solid var(--bk-border)', color: 'var(--bk-text-secondary)' }}
+                        >
+                            Edit
+                        </button>
                     )}
                 </div>
 
@@ -609,6 +622,16 @@ function ClubDetailPage() {
                 bookId={reviewBook?.id ?? 0}
                 bookTitle={reviewBook?.title ?? ''}
                 existingReview={reviewBook?.existingReview}
+            />
+            <CreateClubModal
+                open={editClubOpen}
+                onClose={() => setEditClubOpen(false)}
+                existingClub={isAdmin ? {
+                    id: club.id,
+                    name: club.name,
+                    description: club.description,
+                    isPublic: club.isPublic,
+                } : undefined}
             />
         </div>
     );
