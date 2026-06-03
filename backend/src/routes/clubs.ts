@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import prisma from '../lib/prisma';
 import { errorResponse, successResponse } from '../lib/response';
 import { isClubAdmin, isClubMember, parseValidNumber } from '../lib/utils';
-import authMiddleware from '../middleware/auth';
+import { authMiddleware } from '../middleware/auth.js'
 import { AppVariables, UpdateClubPayload } from '../types';
 
 const clubsRouter = new Hono<{ Variables: AppVariables }>();
@@ -254,6 +254,7 @@ clubsRouter.get('/:id', async (context) => {
             name: true,
             description: true,
             isPublic: true,
+            inviteCode: true,
             createdAt: true,
             creator: {
                 select: {

@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import prisma from '../lib/prisma';
-import authMiddleware from '../middleware/auth';
+import { authMiddleware } from '../middleware/auth.js'
 import { AppVariables } from '../types';
 import { errorResponse, successResponse } from '../lib/response';
 import { HTTP } from '../lib/httpCodes';

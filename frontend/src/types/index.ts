@@ -7,22 +7,28 @@ export interface User {
 }
 
 export interface Club {
-    id: number
-    name: string
-    description: string
-    isPublic: boolean
-    inviteCode?: string
-    createdAt: string
+    id: number;
+    name: string;
+    description: string;
+    isPublic: boolean;
+    inviteCode?: string;
+    createdAt: string;
     creator: {
-        name: string
-        avatar: string | null
-    }
+        name: string;
+        avatar: string | null;
+    };
     clubMembers?: {
-        role: 'ADMIN' | 'MEMBER'
-    }[]
+        role: 'ADMIN' | 'MEMBER';
+        joinedAt: string;
+        user: {
+            id: number;
+            name: string;
+            avatar: string | null;
+        };
+    }[];
     _count?: {
-        clubMembers: number
-    }
+        clubMembers: number;
+    };
 }
 
 export interface Book {
@@ -36,6 +42,7 @@ export interface Book {
     proposedAt: string
     startedAt: string | null
     completedAt: string | null
+    userVoted?: boolean;
     proposer: {
         name: string
         avatar: string | null

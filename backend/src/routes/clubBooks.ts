@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import prisma from '../lib/prisma';
-import authMiddleware from '../middleware/auth';
+import { authMiddleware, optionalAuthMiddleware } from '../middleware/auth.js'
 import { AppVariables } from '../types';
 import { errorResponse, successResponse } from '../lib/response';
 import { HTTP } from '../lib/httpCodes';
@@ -14,8 +14,10 @@ const clubBooksRouter = new Hono<{ Variables: AppVariables }>
 
 
 // GET - Public
-clubBooksRouter.get('/:id/books', async (context) => {
+clubBooksRouter.get('/:id/books', optionalAuthMiddleware, async (context) => {
     const clubId = parseValidNumber(context.req.param('id'));
+    const userId = context.get('userId');
+
     if (!clubId) {
         return errorResponse(context, 'Invalid number', 400);
     }
@@ -28,12 +30,17 @@ clubBooksRouter.get('/:id/books', async (context) => {
             ...(status && { status })
         },
         select: {
+            id: true,
             clubId: true,
             googleBooksId: true,
             title: true,
             author: true,
             coverUrl: true,
             status: true,
+            bookVotes: userId ? {
+                where: { userId, deletedAt: null },
+                select: { id: true }
+            } : false,
             proposer: {
                 select: {
                     name: true,
@@ -47,8 +54,14 @@ clubBooksRouter.get('/:id/books', async (context) => {
             }
         }
     });
+    const booksWithVote = books.map(book => ({
+        ...book,
+        userVoted: userId ? (book.bookVotes?.length ?? 0) > 0 : false,
+        bookVotes: undefined
+    }));
 
-    return successResponse(context, books);
+
+    return successResponse(context, booksWithVote);
 });
 
 // POST - Private

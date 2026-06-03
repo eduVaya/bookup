@@ -2,6 +2,9 @@ import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
 import Navbar from '@/components/layout/Navbar'
 import HomePage from '@/pages/HomePage'
 import LoginPage from '@/pages/LoginPage'
+import DashboardPage from '@/pages/DashboardPage';
+import ClubDetailPage from '@/pages/ClubDetailPage';
+
 import LoadingScreen from '@/components/shared/LoadingScreen'
 import { useAuth } from '@/context/AuthContext'
 import ProfilePage from './pages/ProfilePage'
@@ -29,9 +32,10 @@ function AppRoutes() {
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/clubs/:id" element={<ClubDetailPage />} />
 
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<div className="p-4">Dashboard</div>} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/profile" element={<ProfilePage />} />
         </Route>
       </Route>

@@ -4,7 +4,7 @@ import bcrypt from 'bcryptjs'
 import prisma from '../lib/prisma.js'
 import { errorResponse, successResponse } from '../lib/response.js'
 import type { JwtPayload, AppVariables } from '../types/index.js'
-import authMiddleware from '../middleware/auth.js'
+import { authMiddleware } from '../middleware/auth.js'
 import { HTTP } from '../lib/httpCodes.js'
 
 
