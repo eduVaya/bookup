@@ -181,11 +181,18 @@ clubsRouter.delete('/:id/member/:userId', authMiddleware, async (context) => {
 
 // GET - Public
 clubsRouter.get('/', async (context) => {
+    const search = context.req.query('search');
 
     const clubs = await prisma.club.findMany({
         where: {
             isPublic: true,
-            deletedAt: null
+            deletedAt: null,
+            ...(search && {
+                OR: [
+                    { name: { contains: search, mode: 'insensitive' } },
+                    { description: { contains: search, mode: 'insensitive' } },
+                ]
+            })
         },
         select: {
             id: true,

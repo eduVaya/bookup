@@ -6,11 +6,16 @@ import { Input } from '@/components/ui/input';
 
 function HomePage() {
     const [search, setSearch] = useState('');
+    const [query, setQuery] = useState('');
 
     const { data: clubs, isLoading } = useQuery({
-        queryKey: ['clubs', search],
-        queryFn: () => clubsService.getPublicClubs(search || undefined),
+        queryKey: ['clubs', query],
+        queryFn: () => clubsService.getPublicClubs(query || undefined),
     });
+
+    const handleSearch = () => {
+        setQuery(search);
+    };
 
     return (
         <div className="px-4 py-5 max-w-2xl mx-auto">
@@ -38,10 +43,12 @@ function HomePage() {
                         placeholder="Search clubs..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                         className="border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                     <button
                         className="px-4 text-[13px] font-semibold shrink-0"
+                        onClick={handleSearch}
                         style={{ background: 'var(--bk-accent)', color: 'var(--bk-bg)' }}
                     >
                         Search
