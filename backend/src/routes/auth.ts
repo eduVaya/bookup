@@ -18,11 +18,11 @@ authRouter.post('/register', async (context) => {
     const { email, password, name } = await context.req.json();
 
     if (!email || !password || !name) {
-        return errorResponse(context, 'Email already in use', 409)
+        return errorResponse(context, 'Email already in use', HTTP.CONFLICT);
     }
 
     if (password.length < 6) {
-        return errorResponse(context, 'Password must be at least 6 characters.', 400);
+        return errorResponse(context, 'Password must be at least 6 characters.', HTTP.BAD_REQUEST);
     }
 
     const existingUser = await prisma.user.findUnique({
@@ -30,7 +30,7 @@ authRouter.post('/register', async (context) => {
     });
 
     if (existingUser) {
-        return errorResponse(context, 'Email already in use', 409)
+        return errorResponse(context, 'Email already in use', HTTP.CONFLICT);
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -58,7 +58,7 @@ authRouter.post('/register', async (context) => {
             name: user.name,
             avatar: user.avatar
         }
-    }, 201);
+    }, HTTP.CREATED);
 });
 
 // POST - Public
@@ -104,7 +104,7 @@ authRouter.post('/login', async (context) => {
             name: user.name,
             avatar: user.avatar
         }
-    }, 201);
+    }, HTTP.CREATED);
 })
 
 // GET - Private
@@ -123,7 +123,7 @@ authRouter.get('/me', authMiddleware, async (context) => {
     })
 
     if (!user) {
-        return context.json({ error: 'User not found' }, 404)
+        return context.json({ error: 'User not found' }, HTTP.NOT_FOUND)
     }
     return successResponse(context, {
         user

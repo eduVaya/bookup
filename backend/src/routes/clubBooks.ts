@@ -19,7 +19,7 @@ clubBooksRouter.get('/:id/books', optionalAuthMiddleware, async (context) => {
     const userId = context.get('userId');
 
     if (!clubId) {
-        return errorResponse(context, 'Invalid number', 400);
+        return errorResponse(context, 'Invalid number', HTTP.BAD_REQUEST);
     }
     const status = context.req.query('status') as BookStatus | undefined;
 
@@ -69,7 +69,7 @@ clubBooksRouter.post('/:id/books', authMiddleware, async (context) => {
     const userId = context.get('userId');
     const clubId = parseValidNumber(context.req.param('id'));
     if (!clubId) {
-        return errorResponse(context, 'Invalid number', 400);
+        return errorResponse(context, 'Invalid number', HTTP.BAD_REQUEST);
     }
     const { googleBooksId, title, author, coverUrl } = await context.req.json();
     if (!googleBooksId || !title || !author) {
