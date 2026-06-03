@@ -71,11 +71,20 @@ const changeBookStatus = async (clubId: number, bookId: number, newStatus: 'READ
         return handleError(error);
     }
 };
+
+const deleteBook = async (clubId: number, bookId: number): Promise<void> => {
+    try {
+        await api.delete(`/clubs/${clubId}/books/${bookId}`);
+    } catch (error) {
+        return handleError(error);
+    }
+};
 export const booksService = {
     getClubBooks,
     searchBooks,
     proposeBook,
     voteBook,
     unVoteBook,
-    changeBookStatus
+    changeBookStatus,
+    deleteBook
 };

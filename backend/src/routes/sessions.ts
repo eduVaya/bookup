@@ -1,6 +1,6 @@
 import { Hono } from 'hono'
 import prisma from '../lib/prisma';
-import { authMiddleware } from '../middleware/auth.js'
+import { authMiddleware, optionalAuthMiddleware } from '../middleware/auth.js'
 import { AppVariables, UpdateSessionPayload } from '../types';
 import { errorResponse, successResponse } from '../lib/response';
 import { HTTP } from '../lib/httpCodes';
@@ -11,8 +11,8 @@ import { BOOK_STATUS } from '../lib/bookStatus';
 const sessionRouter = new Hono<{ Variables: AppVariables }>;
 
 // GET - Public
-sessionRouter.get('/:id/sessions', async (context) => {
-
+sessionRouter.get('/:id/sessions', optionalAuthMiddleware, async (context) => {
+    const userId = context.get('userId');
     const { params, errors } = parseParams({
         clubId: context.req.param('id'),
     });
@@ -26,8 +26,11 @@ sessionRouter.get('/:id/sessions', async (context) => {
             deletedAt: null
         },
         select: {
+            id: true,
             title: true,
             scheduledAt: true,
+            location: true,
+            bookId: true,
             book: {
                 select: {
                     title: true,
@@ -38,11 +41,20 @@ sessionRouter.get('/:id/sessions', async (context) => {
                 select: {
                     attendances: true
                 }
-            }
+            },
+            attendances: userId ? {
+                where: { userId, deletedAt: null },
+                select: { status: true }
+            } : false
         }
     });
-    return successResponse(context, sessions);
+    const sessionsWithRsvp = sessions.map(session => ({
+        ...session,
+        userAttendance: userId ? (session.attendances?.[0]?.status ?? null) : null,
+        attendances: undefined,
+    }));
 
+    return successResponse(context, sessionsWithRsvp);
 });
 
 // POST - Private

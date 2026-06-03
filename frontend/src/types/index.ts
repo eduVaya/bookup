@@ -59,7 +59,8 @@ export interface Session {
     title: string
     scheduledAt: string
     location: string | null
-    createdAt: string
+    createdAt: string,
+    userAttendance: 'ATTENDING' | 'NOT_ATTENDING' | 'MAYBE' | null;
     book: {
         title: string
         coverUrl: string | null
@@ -81,6 +82,8 @@ export interface Review {
     }
 }
 
+
+//Apis
 export interface ApiResponse<T> {
     success: boolean
     data: T
