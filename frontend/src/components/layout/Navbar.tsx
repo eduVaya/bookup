@@ -48,7 +48,7 @@ function Toggle({ user }: { user: { name: string } | null }) {
     )
 }
 
-function Avatar({ name, onLogout }: { name: string; onLogout: () => void }) {
+function Avatar({ name, avatar, onLogout }: { name: string; avatar: string | null; onLogout: () => void }) {
     const [open, setOpen] = useState(false)
     const navigate = useNavigate()
 
@@ -59,7 +59,15 @@ function Avatar({ name, onLogout }: { name: string; onLogout: () => void }) {
                 className="w-[30px] h-[30px] rounded-full flex items-center justify-center text-[12px] font-semibold cursor-pointer"
                 style={{ background: '#577146', color: 'var(--bk-bg)' }}
             >
-                {name.charAt(0).toUpperCase()}
+                {avatar ? (
+                    <img
+                        src={avatar}
+                        alt={name}
+                        className="w-full h-full object-cover"
+                    />
+                ) : (
+                    name.charAt(0).toUpperCase()
+                )}
             </div>
 
             {open && (
@@ -113,7 +121,7 @@ function Navbar() {
             <div className="flex items-center gap-3">
                 <Toggle user={user} />
                 {user && (
-                    <Avatar name={user.name} onLogout={handleLogout} />
+                    <Avatar name={user.name} avatar={user.avatar} onLogout={handleLogout} />
                 )}
             </div>
         </nav>
