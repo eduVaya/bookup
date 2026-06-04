@@ -44,7 +44,7 @@ function ReviewModal({ open, onClose, clubId, bookId, bookTitle, existingReview 
         }
     });
     const updateMutation = useMutation({
-        mutationFn: () => reviewsService.updateReview(clubId, bookId, existingReview!.id, {
+        mutationFn: () => reviewsService.updateReview(clubId, bookId, {
             rating,
             content: content.trim() || undefined,
         }),
