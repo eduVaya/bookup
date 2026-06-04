@@ -50,8 +50,15 @@ app.notFound((context) => {
         errors: ['Route not found']
     }, 404)
 })
-
+console.log({
+    FRONTEND_URL: process.env.FRONTEND_URL,
+    NODE_ENV: process.env.NODE_ENV
+});
 app.get('/', (context) => {
+    console.log({
+        FRONTEND_URL: process.env.FRONTEND_URL,
+        NODE_ENV: process.env.NODE_ENV
+    });
     return context.json({ message: 'BookUp API running' });
 });
 
