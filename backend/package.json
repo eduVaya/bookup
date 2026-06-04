@@ -9,6 +9,9 @@
     "start": "tsx src/index.ts",
     "seed": "tsx prisma/seed.ts"
   },
+  "engines": {
+    "node": "20.x"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
