@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useAuth, useAuthUser } from "@/context/AuthContext";
+import { useAuthUser } from "@/context/AuthContext";
 import { getErrors } from "@/lib/services/handleError";
 import { userService } from "@/lib/services/user.service";
 import { useMutation, useQuery } from "@tanstack/react-query";

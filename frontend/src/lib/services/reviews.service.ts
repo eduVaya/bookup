@@ -33,10 +33,10 @@ const deleteReview = async (clubId: number, bookId: number, reviewId: number): P
     }
 };
 
-const updateReview = async (clubId: number, bookId: number, reviewId: number, params: CreateReviewParams): Promise<Review> => {
+const updateReview = async (clubId: number, bookId: number, params: CreateReviewParams): Promise<Review> => {
     try {
         const response = await api.patch<ApiResponse<Review>>(
-            `/clubs/${clubId}/books/${bookId}/reviews`,  // sin reviewId
+            `/clubs/${clubId}/books/${bookId}/reviews`,
             params
         );
         return response.data.data;
