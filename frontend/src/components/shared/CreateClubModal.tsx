@@ -50,7 +50,7 @@ function CreateClubModal({ open, onClose, existingClub }: CreateClubModalProps) 
     });
     const updateMutation = useMutation({
         mutationFn: () => clubsService.updateClub(existingClub!.id, { name, description, isPublic }),
-        onSuccess: (data) => {
+        onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['club', existingClub!.id] });
             queryClient.invalidateQueries({ queryKey: ['myClubs'] });
             toast.success('Club updated!');
