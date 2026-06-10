@@ -110,6 +110,7 @@ VITE_CLOUDINARY_UPLOAD_PRESET=your-upload-preset
 ## Roadmap
 
 ### Phase 2
+- Pagination for public feed and club books
 - Direct join for public clubs (no invite code required)
 - Email notifications for new sessions and book status changes
 - Leave club
