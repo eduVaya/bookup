@@ -7,13 +7,11 @@ import CreateClubModal from '@/components/shared/CreateClubModal';
 import { clubsService } from '@/lib/services/clubs.service';
 import JoinClubModal from '@/components/shared/JoinClubModal';
 
-
 function DashboardPage() {
     const { user } = useAuthUser();
     const navigate = useNavigate();
     const [createClubOpen, setCreateClubOpen] = useState(false);
     const [joinClubOpen, setJoinClubOpen] = useState(false);
-
 
     const { data: clubs, isLoading } = useQuery({
         queryKey: ['myClubs', user.id],
@@ -21,27 +19,29 @@ function DashboardPage() {
     });
 
     return (
-        <div className="px-4 py-6 max-w-2xl mx-auto">
-            <div className="flex items-center justify-between mb-6">
+        <div className="px-6 py-8 max-w-5xl mx-auto">
+            <div className="flex items-center justify-between mb-8">
                 <h1
-                    className="text-[22px] font-bold"
+                    className="text-3xl font-bold"
                     style={{ fontFamily: 'var(--font-serif)', color: 'var(--bk-text-primary)' }}
                 >
                     My clubs
                 </h1>
-                <Button
-                    variant="outline"
-                    onClick={() => setJoinClubOpen(true)}
-                    style={{ borderColor: 'var(--bk-accent)', color: 'var(--bk-accent)' }}
-                >
-                    Join club
-                </Button>
-                <Button
-                    onClick={() => setCreateClubOpen(true)}
-                    style={{ background: 'var(--bk-accent)', color: 'var(--bk-bg)' }}
-                >
-                    + Create club
-                </Button>
+                <div className="flex gap-3">
+                    <Button
+                        variant="outline"
+                        onClick={() => setJoinClubOpen(true)}
+                        style={{ borderColor: 'var(--bk-accent)', color: 'var(--bk-accent)' }}
+                    >
+                        Join club
+                    </Button>
+                    <Button
+                        onClick={() => setCreateClubOpen(true)}
+                        style={{ background: 'var(--bk-accent)', color: 'var(--bk-bg)' }}
+                    >
+                        + Create club
+                    </Button>
+                </div>
             </div>
 
             {isLoading && (
@@ -55,13 +55,10 @@ function DashboardPage() {
 
             {!isLoading && clubs?.length === 0 && (
                 <div
-                    className="rounded-xl p-8 text-center"
+                    className="rounded-xl p-12 text-center"
                     style={{ background: 'var(--bk-bg-card)', border: '1px solid var(--bk-border)' }}
                 >
-                    <p
-                        className="text-[14px] mb-3"
-                        style={{ color: 'var(--bk-text-muted)' }}
-                    >
+                    <p className="text-base mb-4" style={{ color: 'var(--bk-text-muted)' }}>
                         You haven't joined any clubs yet.
                     </p>
                     <Button
@@ -74,32 +71,26 @@ function DashboardPage() {
             )}
 
             {!isLoading && clubs && clubs.length > 0 && (
-                <div className="flex flex-col gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {clubs.map((club) => (
                         <div
                             key={club.id}
                             onClick={() => navigate(`/clubs/${club.id}`)}
-                            className="rounded-xl p-4 cursor-pointer flex items-center justify-between"
+                            className="rounded-xl p-5 cursor-pointer transition-all duration-200 flex flex-col gap-3"
                             style={{ background: 'var(--bk-bg-card)', border: '1px solid var(--bk-border)' }}
+                            onMouseEnter={(e) => e.currentTarget.style.boxShadow = '0 8px 24px rgba(87,113,70,0.15)'}
+                            onMouseLeave={(e) => e.currentTarget.style.boxShadow = 'none'}
                         >
-                            <div>
+                            <div className="flex items-start justify-between">
                                 <h3
-                                    className="text-[16px] font-medium mb-1"
+                                    className="text-2xl font-medium"
                                     style={{ fontFamily: 'var(--font-serif)', color: 'var(--bk-text-primary)' }}
                                 >
                                     {club.name}
                                 </h3>
-                                <p
-                                    className="text-[12px]"
-                                    style={{ color: 'var(--bk-text-muted)' }}
-                                >
-                                    {club._count?.clubMembers ?? 0} members
-                                </p>
-                            </div>
-                            <div className="flex items-center gap-2">
                                 {club.clubMembers?.[0]?.role && (
                                     <span
-                                        className="text-[11px] font-semibold px-2 py-1 rounded-full"
+                                        className="text-sm font-semibold px-2 py-1 rounded-full flex-shrink-0 ml-2"
                                         style={{
                                             background: club.clubMembers[0].role === 'ADMIN' ? 'var(--bk-accent)' : 'var(--bk-toggle-bg)',
                                             color: club.clubMembers[0].role === 'ADMIN' ? 'var(--bk-bg)' : 'var(--bk-accent)',
@@ -108,7 +99,25 @@ function DashboardPage() {
                                         {club.clubMembers[0].role === 'ADMIN' ? 'Admin' : 'Member'}
                                     </span>
                                 )}
-                                <span style={{ color: 'var(--bk-text-muted)' }}>›</span>
+                            </div>
+
+                            <p
+                                className="text-base line-clamp-2 flex-1"
+                                style={{ color: 'var(--bk-text-muted)' }}
+                            >
+                                {club.description}
+                            </p>
+
+                            <div
+                                className="flex items-center justify-between pt-3"
+                                style={{ borderTop: '0.5px solid var(--bk-border)' }}
+                            >
+                                <p className="text-base" style={{ color: 'var(--bk-text-muted)' }}>
+                                    {club._count?.clubMembers ?? 0} members
+                                </p>
+                                <span className="text-base font-medium" style={{ color: 'var(--bk-accent)' }}>
+                                    View →
+                                </span>
                             </div>
                         </div>
                     ))}

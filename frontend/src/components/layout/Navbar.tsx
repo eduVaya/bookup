@@ -1,52 +1,52 @@
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '@/context/AuthContext'
 import { useState } from 'react'
 
-function Toggle({ user }: { user: { name: string } | null }) {
-    const navigate = useNavigate()
-    const location = useLocation()
+// function Toggle({ user }: { user: { name: string } | null }) {
+//     const navigate = useNavigate()
+//     const location = useLocation()
 
-    const options = user
-        ? [
-            { label: 'Dashboard', path: '/dashboard' },
-            { label: 'Feed', path: '/' },
-        ]
-        : [
-            { label: 'Login', path: '/login' },
-            { label: 'Feed', path: '/' },
-        ]
+//     const options = user
+//         ? [
+//             { label: 'Dashboard', path: '/dashboard' },
+//             { label: 'Feed', path: '/' },
+//         ]
+//         : [
+//             { label: 'Login', path: '/login' },
+//             { label: 'Feed', path: '/' },
+//         ]
 
-    const activeIndex = options.findIndex(option => option.path === location.pathname);
-    const currentIndex = activeIndex === -1 ? 0 : activeIndex;
+//     const activeIndex = options.findIndex(option => option.path === location.pathname);
+//     const currentIndex = activeIndex === -1 ? 0 : activeIndex;
 
-    return (
-        <div
-            className="relative flex cursor-pointer select-none rounded-full p-[3px] flex-shrink-0"
-            style={{ background: 'var(--bk-toggle-bg)', width: `${options.length * 80}px` }}
-        >
-            <div
-                className="absolute top-[3px] left-[3px] rounded-full transition-transform duration-[250ms]"
-                style={{
-                    width: `calc(${100 / options.length}% - 3px)`,
-                    height: 'calc(100% - 6px)',
-                    background: '#577146',
-                    transform: `translateX(${currentIndex * 100}%)`,
-                    boxShadow: '0 1px 6px rgba(87,113,70,0.4)'
-                }}
-            />
-            {options.map((option, index) => (
-                <span
-                    key={option.path}
-                    onClick={() => navigate(option.path)}
-                    className="flex-1 text-center text-[11px] font-semibold relative z-10 py-[5px] transition-colors duration-[250ms]"
-                    style={{ color: currentIndex === index ? '#fff' : 'var(--bk-toggle-inactive)' }}
-                >
-                    {option.label}
-                </span>
-            ))}
-        </div>
-    )
-}
+//     return (
+//         <div
+//             className="relative flex cursor-pointer select-none rounded-full p-1 flex-shrink-0"
+//             style={{ background: 'var(--bk-toggle-bg)', width: `${options.length * 100}px` }}
+//         >
+//             <div
+//                 className="absolute top-1 left-1 rounded-full transition-transform duration-[250ms]"
+//                 style={{
+//                     width: `calc(${100 / options.length}% - 4px)`,
+//                     height: 'calc(100% - 8px)',
+//                     background: '#577146',
+//                     transform: `translateX(${currentIndex * 100}%)`,
+//                     boxShadow: '0 1px 6px rgba(87,113,70,0.4)'
+//                 }}
+//             />
+//             {options.map((option, index) => (
+//                 <span
+//                     key={option.path}
+//                     onClick={() => navigate(option.path)}
+//                     className="flex-1 text-center text-sm font-semibold relative z-10 py-2 transition-colors duration-[250ms]"
+//                     style={{ color: currentIndex === index ? '#fff' : 'var(--bk-toggle-inactive)' }}
+//                 >
+//                     {option.label}
+//                 </span>
+//             ))}
+//         </div>
+//     )
+// }
 
 function Avatar({ name, avatar, onLogout }: { name: string; avatar: string | null; onLogout: () => void }) {
     const [open, setOpen] = useState(false)
@@ -56,7 +56,7 @@ function Avatar({ name, avatar, onLogout }: { name: string; avatar: string | nul
         <div className="relative">
             <div
                 onClick={() => setOpen(!open)}
-                className="w-[30px] h-[30px] rounded-full flex items-center justify-center text-[12px] font-semibold cursor-pointer"
+                className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-semibold cursor-pointer overflow-hidden"
                 style={{ background: '#577146', color: 'var(--bk-bg)' }}
             >
                 {avatar ? (
@@ -104,24 +104,48 @@ function Navbar() {
         logout()
         navigate('/')
     }
+    const isActive = (path: string) => location.pathname === path
 
     return (
         <nav
-            className="flex items-center justify-between px-4 h-[52px] sticky top-0 z-50"
+            className="flex items-center justify-between px-6 h-[64px] sticky top-0 z-50"
             style={{ background: 'var(--bk-bg)', borderBottom: '0.5px solid var(--bk-border)' }}
         >
             <span
                 onClick={() => navigate('/')}
-                className="text-[18px] font-bold cursor-pointer"
+                className="text-2xl font-bold cursor-pointer"
                 style={{ fontFamily: 'var(--font-serif)', color: 'var(--bk-text-primary)' }}
             >
                 Book<span style={{ color: 'var(--bk-accent)' }}>Up</span>
             </span>
 
-            <div className="flex items-center gap-3">
-                <Toggle user={user} />
-                {user && (
-                    <Avatar name={user.name} avatar={user.avatar} onLogout={handleLogout} />
+            <div className="flex items-center gap-4">
+                <Link
+                    to="/"
+                    className="text-base font-medium transition-colors"
+                    style={{ color: isActive('/') ? 'var(--bk-accent)' : 'var(--bk-text-secondary)' }}
+                >
+                    Feed
+                </Link>
+                {user ? (
+                    <>
+                        <Link
+                            to="/dashboard"
+                            className="text-text-base font-medium transition-colors"
+                            style={{ color: isActive('/dashboard') ? 'var(--bk-accent)' : 'var(--bk-text-secondary)' }}
+                        >
+                            Dashboard
+                        </Link>
+                        <Avatar name={user.name} avatar={user.avatar} onLogout={handleLogout} />
+                    </>
+                ) : (
+                    <Link
+                        to="/login"
+                        className="text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
+                        style={{ background: 'var(--bk-accent)', color: 'var(--bk-bg)' }}
+                    >
+                        Login
+                    </Link>
                 )}
             </div>
         </nav>

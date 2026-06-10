@@ -50,7 +50,7 @@ function CompletedBook({ book, clubId, isMember, isAdmin, onReview, onDelete, is
         className="py-3"
         style={{ borderBottom: '0.5px solid var(--bk-border)' }}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 mb-2">
           {book.coverUrl && (
             <img
               src={book.coverUrl}
@@ -58,47 +58,47 @@ function CompletedBook({ book, clubId, isMember, isAdmin, onReview, onDelete, is
               className="w-[36px] h-[52px] rounded object-cover flex-shrink-0"
             />
           )}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <p
-              className="text-[13px] font-medium"
+              className="text-sm font-medium line-clamp-1"
               style={{ color: 'var(--bk-text-primary)' }}
             >
               {book.title}
             </p>
             <p
-              className="text-[11px]"
+              className="text-xs"
               style={{ color: 'var(--bk-text-muted)' }}
             >
               {book.author}
             </p>
             {avgRating && (
-              <p className="text-[11px]" style={{ color: 'var(--bk-accent)' }}>
+              <p className="text-xs" style={{ color: 'var(--bk-accent)' }}>
                 ⭐ {avgRating} · {reviews?.length} reviews
               </p>
             )}
           </div>
+        </div>
 
-          <div className="flex gap-1">
-            {isMember && !myReview && (
-              <button
-                onClick={() => onReview({ id: book.id, title: book.title })}
-                className="text-[11px] font-semibold px-2 py-1 rounded-lg flex-shrink-0"
-                style={{ border: '1px solid var(--bk-accent)', color: 'var(--bk-accent)' }}
-              >
-                Review
-              </button>
-            )}
-            {isAdmin && (
-              <button
-                onClick={() => onDelete(book.id)}
-                disabled={isDeleting}
-                className="text-[11px] font-semibold px-2 py-1 rounded-lg flex-shrink-0"
-                style={{ border: '1px solid #C4A89A', color: '#8B5E52' }}
-              >
-                ✕
-              </button>
-            )}
-          </div>
+        <div className="flex gap-2 justify-end flex-wrap">
+          {isMember && !myReview && (
+            <button
+              onClick={() => onReview({ id: book.id, title: book.title })}
+              className="text-xs font-semibold px-2 py-1 rounded-lg"
+              style={{ border: '1px solid var(--bk-accent)', color: 'var(--bk-accent)' }}
+            >
+              Review
+            </button>
+          )}
+          {isAdmin && (
+            <button
+              onClick={() => onDelete(book.id)}
+              disabled={isDeleting}
+              className="text-xs font-semibold px-2 py-1 rounded-lg"
+              style={{ border: '1px solid #C4A89A', color: '#8B5E52' }}
+            >
+              ✕
+            </button>
+          )}
         </div>
 
         {/* Reviews */}
@@ -111,16 +111,16 @@ function CompletedBook({ book, clubId, isMember, isAdmin, onReview, onDelete, is
                 style={{ background: 'var(--bk-bg)', border: '1px solid var(--bk-border)' }}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-[12px] font-medium" style={{ color: 'var(--bk-text-primary)' }}>
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="text-xs font-medium" style={{ color: 'var(--bk-text-primary)' }}>
                       {review.user.name}
                     </span>
-                    <span className="text-[11px]" style={{ color: 'var(--bk-accent)' }}>
+                    <span className="text-xs" style={{ color: 'var(--bk-accent)' }}>
                       {'⭐'.repeat(review.rating)}
                     </span>
                   </div>
                   {review.user.name === user?.name && (
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 flex-shrink-0">
                       <button
                         onClick={() => onReview({
                           id: book.id,
@@ -131,14 +131,14 @@ function CompletedBook({ book, clubId, isMember, isAdmin, onReview, onDelete, is
                             content: review.content
                           }
                         })}
-                        className="text-[10px] px-2 py-1 rounded"
+                        className="text-xs px-2 py-1 rounded"
                         style={{ color: 'var(--bk-text-muted)' }}
                       >
                         Edit
                       </button>
                       <button
                         onClick={() => setReviewToDelete(review.id)}
-                        className="text-[10px] px-2 py-1 rounded"
+                        className="text-xs px-2 py-1 rounded"
                         style={{ color: '#8B5E52' }}
                       >
                         ✕
@@ -147,7 +147,7 @@ function CompletedBook({ book, clubId, isMember, isAdmin, onReview, onDelete, is
                   )}
                 </div>
                 {review.content && (
-                  <p className="text-[12px]" style={{ color: 'var(--bk-text-secondary)' }}>
+                  <p className="text-xs md:text-sm" style={{ color: 'var(--bk-text-secondary)' }}>
                     {review.content}
                   </p>
                 )}

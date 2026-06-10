@@ -6,7 +6,7 @@ function LoadingScreen() {
         >
             <div className="flex flex-col items-center gap-3">
                 <span
-                    className="text-[24px] font-bold"
+                    className="text-2xl font-bold"
                     style={{ fontFamily: 'var(--font-serif)', color: 'var(--bk-accent)' }}
                 >
                     BookUp

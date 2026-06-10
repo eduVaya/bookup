@@ -18,17 +18,17 @@ function HomePage() {
     };
 
     return (
-        <div className="px-4 py-5 max-w-2xl mx-auto">
+        <div className="px-4 py-5 max-w-4xl mx-auto">
             {/* Hero */}
             <div className="mb-6">
                 <h1
-                    className="text-[24px] font-bold mb-1 leading-tight"
+                    className="text-2xl font-bold mb-1 leading-tight"
                     style={{ fontFamily: 'var(--font-serif)', color: 'var(--bk-text-primary)' }}
                 >
                     Discover <em style={{ color: 'var(--bk-accent)' }}>book clubs</em> you'll love
                 </h1>
                 <p
-                    className="text-[13px] mb-4"
+                    className="text-base mb-4"
                     style={{ color: 'var(--bk-text-muted)' }}
                 >
                     Join a community, vote for the next book, and share your thoughts.
@@ -47,7 +47,7 @@ function HomePage() {
                         className="border-none bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0"
                     />
                     <button
-                        className="px-4 text-[13px] font-semibold shrink-0"
+                        className="px-4 text-base font-semibold shrink-0"
                         onClick={handleSearch}
                         style={{ background: 'var(--bk-accent)', color: 'var(--bk-bg)' }}
                     >
@@ -59,14 +59,14 @@ function HomePage() {
             {/* Feed header */}
             <div className="flex items-center justify-between mb-3">
                 <h2
-                    className="text-[10px] font-semibold uppercase tracking-wider"
+                    className="text-base font-semibold uppercase tracking-wider"
                     style={{ color: 'var(--bk-text-muted)' }}
                 >
                     Public clubs
                 </h2>
                 {clubs && (
                     <span
-                        className="text-[11px]"
+                        className="text-base"
                         style={{ color: 'var(--bk-text-muted)' }}
                     >
                         {clubs.length} clubs
@@ -84,10 +84,10 @@ function HomePage() {
             )}
 
             {!isLoading && clubs && (
-                <div className="flex flex-col gap-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {clubs.length === 0 ? (
                         <p
-                            className="text-center py-12 text-[13px]"
+                            className="text-center py-12 text-base"
                             style={{ color: 'var(--bk-text-muted)' }}
                         >
                             No clubs found.
