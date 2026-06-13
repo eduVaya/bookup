@@ -1,4 +1,6 @@
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
 import Navbar from '@/components/layout/Navbar'
 import HomePage from '@/pages/HomePage'
 import LoginPage from '@/pages/LoginPage'
@@ -48,6 +50,7 @@ function App() {
   return (
     <BrowserRouter>
       <AppRoutes />
+      <ReactQueryDevtools initialIsOpen={false} />
     </BrowserRouter>
   )
 }

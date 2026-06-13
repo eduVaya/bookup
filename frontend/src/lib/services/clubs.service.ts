@@ -13,19 +13,35 @@ interface UpdateClubParams {
     isPublic?: boolean;
 }
 
-const getPublicClubs = async (search?: string): Promise<Club[]> => {
+interface ClubsResponse {
+    clubs: Club[];
+    total: number;
+    page: number;
+    totalPages: number;
+}
+
+interface ClubsResponse {
+    clubs: Club[];
+    total: number;
+    page: number;
+    totalPages: number;
+}
+
+const getPublicClubs = async (search?: string, page: number = 1): Promise<ClubsResponse> => {
     try {
-        const params = search ? { search } : {};
-        const response = await api.get<ApiResponse<Club[]>>('/clubs', { params });
+        const params: Record<string, string | number> = { page };
+        if (search) params.search = search;
+        const response = await api.get<ApiResponse<ClubsResponse>>('/clubs', { params });
         return response.data.data;
     } catch (error) {
         return handleError(error);
     }
 };
 
-const getMyClubs = async (): Promise<Club[]> => {
+
+const getMyClubs = async (page: number = 1): Promise<ClubsResponse> => {
     try {
-        const response = await api.get<ApiResponse<Club[]>>('/clubs/mine',);
+        const response = await api.get<ApiResponse<ClubsResponse>>('/clubs/mine', { params: { page } });
         return response.data.data;
     } catch (error) {
         return handleError(error);

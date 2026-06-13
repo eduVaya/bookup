@@ -182,76 +182,103 @@ clubsRouter.delete('/:id/member/:userId', authMiddleware, async (context) => {
 // GET - Public
 clubsRouter.get('/', async (context) => {
     const search = context.req.query('search');
+    const page = Number(context.req.query('page') ?? 1);
+    const limit = Number(context.req.query('limit') ?? 9);
+    const skip = (page - 1) * limit;
 
-    const clubs = await prisma.club.findMany({
-        where: {
-            isPublic: true,
-            deletedAt: null,
-            ...(search && {
-                OR: [
-                    { name: { contains: search, mode: 'insensitive' } },
-                    { description: { contains: search, mode: 'insensitive' } },
-                ]
-            })
-        },
-        select: {
-            id: true,
-            name: true,
-            description: true,
-            isPublic: true,
-            createdAt: true,
-            creator: {
-                select: {
-                    name: true,
-                    avatar: true
-                }
-            },
-            _count: {
-                select: {
-                    clubMembers: true
+
+    const where = {
+        isPublic: true,
+        deletedAt: null,
+        ...(search && {
+            OR: [
+                { name: { contains: search, mode: 'insensitive' as const } },
+                { description: { contains: search, mode: 'insensitive' as const } },
+            ]
+        })
+    };
+
+    const [clubs, total] = await Promise.all([
+        prisma.club.findMany({
+            where,
+            skip,
+            take: limit,
+            orderBy: { createdAt: 'desc' },
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                isPublic: true,
+                createdAt: true,
+                creator: {
+                    select: { name: true, avatar: true }
+                },
+                _count: {
+                    select: { clubMembers: true }
                 }
             }
-        }
-    });
+        }),
+        prisma.club.count({ where })
+    ]);
 
-    return successResponse(context, clubs);
+    return successResponse(context, {
+        clubs,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+    });
 });
 
 // GET - Private
 clubsRouter.get('/mine', authMiddleware, async (context) => {
     const userId = context.get('userId');
 
-    const myClubs = await prisma.club.findMany({
-        where: {
-            clubMembers: {
-                some: {
-                    userId,
-                    deletedAt: null
-                }
+    const page = Number(context.req.query('page') ?? 1);
+    const limit = Number(context.req.query('limit') ?? 9);
+    const skip = (page - 1) * 9;
 
+    const where = {
+        clubMembers: {
+            some: {
+                userId,
+                deletedAt: null
             }
-        },
-        select: {
-            id: true,
-            name: true,
-            description: true,
-            isPublic: true,
-            createdAt: true,
-            clubMembers: {
-                where: { userId, deletedAt: null },
-                select: { role: true }
-            },
-            _count: {
-                select: {
-                    clubMembers: {
-                        where: { deletedAt: null }
+        }
+    }
+
+    const [clubs, total] = await Promise.all([
+        prisma.club.findMany({
+            where,
+            skip,
+            take: limit,
+            select: {
+                id: true,
+                name: true,
+                description: true,
+                isPublic: true,
+                createdAt: true,
+                clubMembers: {
+                    where: { userId, deletedAt: null },
+                    select: { role: true }
+                },
+                _count: {
+                    select: {
+                        clubMembers: {
+                            where: { deletedAt: null }
+                        }
                     }
                 }
             }
-        }
-    })
+        }),
+        prisma.club.count({ where })
+    ]);
 
-    return successResponse(context, myClubs);
+    return successResponse(context, {
+        clubs,
+        total,
+        page,
+        totalPages: Math.ceil(total / limit),
+    });
 });
 
 // GET - Public
